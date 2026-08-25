@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import DockingJob, { JobStatus, VinaGridParams } from '@/models/Job';
-import { uploadToSupabase, generateFileKey } from '@/lib/supabase-client';
+import { uploadToSupabase, generateFileKey } from '../../../lib/supabase-client'
 
 // MongoDB connection
 async function connectDB() {

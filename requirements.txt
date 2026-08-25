@@ -6,7 +6,7 @@ pydantic
 # MongoDB
 pymongo
 
-# Supabase
+# Supabase (replaces boto3 for S3-compatible storage)
 supabase
 
 # Molecular docking
@@ -19,3 +19,10 @@ biopython
 
 # Utilities
 requests
+python-dotenv
+
+# HTTP client for async operations
+httpx
+
+# Logging
+python-json-logger
