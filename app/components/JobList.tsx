@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { RefreshCw, Download, CheckCircle, Clock, AlertCircle, Zap } from 'lucide-react';
+import { RefreshCw, Download, CheckCircle, Clock, AlertCircle, Activity, Database } from 'lucide-react';
 
 interface Job {
   _id: string;
@@ -32,7 +32,7 @@ export default function JobList({ refreshTrigger }: JobListProps) {
       setJobs(data.jobs || []);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Query error');
     } finally {
       setLoading(false);
     }
@@ -42,25 +42,22 @@ export default function JobList({ refreshTrigger }: JobListProps) {
     fetchJobs();
   }, [refreshTrigger]);
 
-  // Auto-refresh running jobs
   useEffect(() => {
     if (!autoRefresh) return;
-
     const hasRunningJobs = jobs.some((job) => job.status === 'PENDING' || job.status === 'RUNNING');
     if (!hasRunningJobs) return;
-
-    const interval = setInterval(fetchJobs, 5000); // Refresh every 5 seconds
+    const interval = setInterval(fetchJobs, 5000);
     return () => clearInterval(interval);
   }, [jobs, autoRefresh]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'COMPLETED':
-        return <CheckCircle className="w-5 h-5 text-green-400" />;
+        return <CheckCircle className="w-5 h-5 text-emerald-400" />;
       case 'RUNNING':
-        return <Zap className="w-5 h-5 text-yellow-400 animate-pulse" />;
+        return <Activity className="w-5 h-5 text-cyan-400 animate-pulse" />;
       case 'PENDING':
-        return <Clock className="w-5 h-5 text-slate-400 animate-pulse" />;
+        return <Clock className="w-5 h-5 text-amber-400 animate-pulse" />;
       case 'FAILED':
         return <AlertCircle className="w-5 h-5 text-red-400" />;
       default:
@@ -71,15 +68,15 @@ export default function JobList({ refreshTrigger }: JobListProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'COMPLETED':
-        return 'bg-green-900/30 border-green-700';
+        return 'bg-gradient-to-br from-emerald-900/40 to-green-950/40 border-emerald-500/40';
       case 'RUNNING':
-        return 'bg-yellow-900/30 border-yellow-700';
+        return 'bg-gradient-to-br from-cyan-900/40 to-blue-950/40 border-cyan-500/40';
       case 'PENDING':
-        return 'bg-slate-700/30 border-slate-600';
+        return 'bg-gradient-to-br from-amber-900/30 to-yellow-950/30 border-amber-500/30';
       case 'FAILED':
-        return 'bg-red-900/30 border-red-700';
+        return 'bg-gradient-to-br from-red-900/40 to-rose-950/40 border-red-500/40';
       default:
-        return 'bg-slate-800 border-slate-700';
+        return 'bg-slate-800/50 border-gray-700';
     }
   };
 
@@ -89,82 +86,99 @@ export default function JobList({ refreshTrigger }: JobListProps) {
   };
 
   return (
-    <div className="bg-slate-800 rounded-lg border border-slate-700 p-6">
+    <div className="bg-gradient-to-br from-slate-800/90 to-blue-950/90 backdrop-blur-sm rounded-lg border border-cyan-500/30 p-6 shadow-xl">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-white">Recent Jobs</h2>
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 text-sm text-slate-300">
+          <div className="p-2 bg-cyan-500/20 rounded-lg border border-cyan-500/40">
+            <Database className="w-5 h-5 text-cyan-300" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-cyan-300">Processing Queue</h2>
+            <p className="text-xs text-gray-400 font-mono">Real-time job monitoring</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <label className="flex items-center gap-2 text-sm text-cyan-300 font-medium">
             <input
               type="checkbox"
               checked={autoRefresh}
               onChange={(e) => setAutoRefresh(e.target.checked)}
-              className="rounded"
+              className="rounded border-cyan-500 bg-slate-900 text-cyan-500 focus:ring-cyan-500/50"
             />
-            Auto-refresh
+            <span className="font-mono text-xs">Auto-refresh</span>
           </label>
           <button
             onClick={fetchJobs}
             disabled={loading}
-            className="p-2 hover:bg-slate-700 rounded-lg transition-colors disabled:opacity-50"
+            className="p-2 hover:bg-cyan-500/20 rounded-lg transition-all disabled:opacity-50 border border-cyan-500/30 hover:border-cyan-500/50 hover:scale-105 active:scale-95"
           >
-            <RefreshCw className={`w-5 h-5 text-slate-300 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-5 h-5 text-cyan-400 ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">
+        <div className="mb-4 p-3 bg-red-900/30 border border-red-500/50 rounded-lg text-red-300 text-sm font-mono">
           {error}
         </div>
       )}
 
       {loading && jobs.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
-          <p className="text-slate-400">Loading jobs...</p>
+        <div className="text-center py-20">
+          <div className="relative inline-block">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-cyan-900/30 border-t-cyan-500"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Activity className="w-8 h-8 text-cyan-400" />
+            </div>
+          </div>
+          <p className="text-gray-400 mt-6 font-mono text-sm">Loading job queue...</p>
         </div>
       ) : jobs.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-slate-400">No jobs yet. Submit one to get started!</p>
+        <div className="text-center py-20">
+          <div className="inline-block p-6 bg-gradient-to-br from-slate-900/80 to-blue-950/50 rounded-full mb-6 border border-cyan-500/20">
+            <Database className="w-12 h-12 text-gray-600" />
+          </div>
+          <p className="text-gray-400 font-semibold text-lg">No jobs in queue</p>
+          <p className="text-gray-500 text-sm mt-2 font-mono">Submit a docking job to begin processing</p>
         </div>
       ) : (
         <div className="space-y-3">
           {jobs.map((job) => (
             <div
               key={job._id}
-              className={`p-4 rounded-lg border transition-colors ${getStatusColor(job.status)}`}
+              className={`p-5 rounded-lg border transition-all hover:shadow-lg hover:shadow-cyan-500/10 ${getStatusColor(job.status)}`}
             >
-              <div className="flex items-start justify-between">
-                <div className="flex items-start gap-3 flex-1">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
                   {getStatusIcon(job.status)}
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-white">{job.jobName}</h3>
-                    <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-cyan-100 text-lg mb-1">{job.jobName}</h3>
+                    <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
-                        <span className="text-slate-400">Status</span>
-                        <p className="text-slate-200 font-medium">{job.status}</p>
+                        <p className="text-gray-500 font-mono text-xs uppercase">Status</p>
+                        <p className="text-gray-200 font-bold text-xs mt-1">{job.status}</p>
                       </div>
                       <div>
-                        <span className="text-slate-400">ID</span>
-                        <p className="text-slate-200 font-mono text-xs truncate">
+                        <p className="text-gray-500 font-mono text-xs uppercase">Job ID</p>
+                        <p className="text-gray-400 font-mono text-xs mt-1 truncate">
                           {job._id.substring(0, 8)}...
                         </p>
                       </div>
                       <div>
-                        <span className="text-slate-400">Created</span>
-                        <p className="text-slate-200">{formatDate(job.createdAt)}</p>
+                        <p className="text-gray-500 font-mono text-xs uppercase">Created</p>
+                        <p className="text-gray-400 font-mono text-xs mt-1">{formatDate(job.createdAt)}</p>
                       </div>
                       {job.bestAffinity !== undefined && (
                         <div>
-                          <span className="text-slate-400">Best Affinity</span>
-                          <p className="text-green-400 font-medium">{job.bestAffinity.toFixed(2)} kcal/mol</p>
+                          <p className="text-gray-500 font-mono text-xs uppercase">Affinity</p>
+                          <p className="text-emerald-400 font-bold text-sm mt-1">{job.bestAffinity.toFixed(2)} kcal/mol</p>
                         </div>
                       )}
                     </div>
 
                     {job.errorMessage && (
-                      <div className="mt-3 p-2 bg-red-900/50 rounded text-red-200 text-sm">
-                        <span className="font-medium">Error:</span> {job.errorMessage}
+                      <div className="mt-3 p-3 bg-red-950/50 rounded-lg border border-red-500/30 text-red-300 text-xs font-mono">
+                        ERROR: {job.errorMessage}
                       </div>
                     )}
                   </div>
@@ -174,10 +188,10 @@ export default function JobList({ refreshTrigger }: JobListProps) {
                   <a
                     href={job.dockingResultUrl}
                     download
-                    className="ml-4 p-2 hover:bg-slate-700 rounded-lg transition-colors flex-shrink-0"
-                    title="Download result"
+                    className="p-2.5 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 rounded-lg transition-all hover:shadow-lg hover:shadow-cyan-500/20 flex-shrink-0 hover:scale-105 active:scale-95"
+                    title="Download results"
                   >
-                    <Download className="w-5 h-5 text-blue-400" />
+                    <Download className="w-5 h-5 text-cyan-300" />
                   </a>
                 )}
               </div>
@@ -185,6 +199,12 @@ export default function JobList({ refreshTrigger }: JobListProps) {
           ))}
         </div>
       )}
+
+      <div className="mt-6 pt-4 border-t border-cyan-500/20 text-center">
+        <p className="text-gray-500 text-xs font-mono">
+          {jobs.length} job{jobs.length !== 1 ? 's' : ''} in queue • Polling interval: 5s
+        </p>
+      </div>
     </div>
   );
 }

@@ -13,17 +13,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "dockGOAT - Molecular Docking Platform",
-  description: "Commercial-grade molecular docking SaaS powered by AutoDock Vina",
+  title: "dockGOAT - Molecular Docking",
+  description: "Professional molecular docking with AutoDock Vina. Free. No credit card required.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-50">
+      <body className="min-h-full flex flex-col bg-white text-gray-900">
         {children}
       </body>
     </html>

@@ -17,8 +17,8 @@ let supabase: any = null;
 function initSupabase() {
   if (supabase) return supabase;
   
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables are required');
+  if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('demo')) {
+    return null; // Return null for demo mode
   }
   
   supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -39,6 +39,11 @@ export async function uploadToSupabase(
 ): Promise<string> {
   try {
     const client = initSupabase();
+    
+    // Demo mode - return fake URL
+    if (!client) {
+      return `https://demo-storage.dockgoat.dev/${fileName}`;
+    }
     
     // Convert string to buffer if needed
     const buffer =

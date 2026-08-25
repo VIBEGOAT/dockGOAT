@@ -5,12 +5,12 @@ import { uploadToSupabase, generateFileKey } from '@/lib/supabase-client';
 
 // MongoDB connection
 async function connectDB() {
-  if (mongoose.connections[0].readyState) return;
-
   const mongoUri = process.env.MONGODB_URI;
-  if (!mongoUri) {
-    throw new Error('MONGODB_URI environment variable is not set');
+  if (!mongoUri || mongoUri.includes('localhost:27017')) {
+    throw new Error('MONGODB_URI not configured');
   }
+
+  if (mongoose.connections[0].readyState) return;
 
   await mongoose.connect(mongoUri);
 }
@@ -128,7 +128,26 @@ export async function POST(request: NextRequest) {
     let targetUrl: string;
     let payload: any;
 
-    await connectDB();
+    // Check if MongoDB is available
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      // Demo mode - return success without persisting
+      const formData = await request.formData();
+      const userId = formData.get('userId') as string;
+      const jobName = formData.get('jobName') as string;
+      
+      const demoJobId = 'demo_' + Math.random().toString(36).substr(2, 9);
+      
+      return NextResponse.json(
+        {
+          success: true,
+          jobId: demoJobId,
+          status: 'DEMO',
+          message: 'Demo mode: Add MONGODB_URI to .env.local to persist jobs. Job submitted to demo queue.',
+        },
+        { status: 201 }
+      );
+    }
 
     // Handle multipart form data (file uploads)
     if (contentType?.includes('multipart/form-data')) {
@@ -187,6 +206,9 @@ export async function POST(request: NextRequest) {
       payload = validatePayload(body);
     }
 
+    // Connect to MongoDB
+    await connectDB();
+
     // Create new job in database
     const job = await DockingJob.create({
       userId: payload.userId,
@@ -244,6 +266,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Check if MongoDB is available
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      // Return empty array for demo mode
+      console.warn('MongoDB not configured - returning demo data');
+      return NextResponse.json({
+        success: true,
+        jobs: [],
+        message: 'MongoDB not configured. Add MONGODB_URI to .env.local to store jobs permanently.'
+      });
+    }
+
     await connectDB();
 
     const query: any = { userId };
@@ -261,9 +295,11 @@ export async function GET(request: NextRequest) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     console.error('Job fetch error:', message);
 
-    return NextResponse.json(
-      { success: false, error: message },
-      { status: 500 }
-    );
+    // Return empty array instead of error for better UX
+    return NextResponse.json({
+      success: true,
+      jobs: [],
+      message: 'Unable to fetch jobs - MongoDB not configured'
+    });
   }
 }

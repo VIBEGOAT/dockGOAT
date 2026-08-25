@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Cloud, AlertCircle, CheckCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle, Target, Upload, Grid3x3 } from 'lucide-react';
 
 interface JobFormProps {
   onJobSubmitted: (jobId: string) => void;
@@ -32,7 +32,7 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
     setSuccess(false);
 
     if (!jobName || !ligandFile || !targetFile) {
-      setError('Please fill in all fields and select both files');
+      setError('All fields required: target disease, ligand file, and receptor file');
       return;
     }
 
@@ -40,7 +40,7 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
 
     try {
       const formData = new FormData();
-      formData.append('userId', 'demo-user'); // In production, use actual user ID
+      formData.append('userId', 'demo-user');
       formData.append('jobName', jobName);
       formData.append('ligandFile', ligandFile);
       formData.append('targetFile', targetFile);
@@ -66,7 +66,7 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to submit job');
+        throw new Error(data.error || 'Job submission failed');
       }
 
       const data = await response.json();
@@ -74,219 +74,264 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
       setJobName('');
       setLigandFile(null);
       setTargetFile(null);
-
-      // Notify parent component
       onJobSubmitted(data.jobId);
 
-      // Clear success message after 3 seconds
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Submission error');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-slate-800 rounded-lg border border-slate-700 p-6">
-      <h2 className="text-2xl font-bold mb-6 text-white flex items-center gap-2">
-        <Cloud className="w-6 h-6 text-blue-400" />
-        Submit Docking Job
-      </h2>
+    <div className="bg-gradient-to-br from-slate-800/90 to-blue-950/90 backdrop-blur-sm rounded-lg border border-cyan-500/30 p-6 shadow-xl">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-2 bg-cyan-500/20 rounded-lg border border-cyan-500/40">
+          <Target className="w-5 h-5 text-cyan-300" />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-cyan-300">Submit Docking Job</h2>
+          <p className="text-xs text-gray-400 font-mono">PDBQT format required</p>
+        </div>
+      </div>
 
       {error && (
-        <div className="mb-4 p-4 bg-red-900/50 border border-red-700 rounded-lg flex items-start gap-3">
+        <div className="mb-4 p-4 bg-red-900/30 border border-red-500/50 rounded-lg flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-          <p className="text-red-200">{error}</p>
+          <p className="text-red-300 text-sm">{error}</p>
         </div>
       )}
 
       {success && (
-        <div className="mb-4 p-4 bg-green-900/50 border border-green-700 rounded-lg flex items-start gap-3">
-          <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-          <p className="text-green-200">Job submitted successfully! Refresh to see it in the list.</p>
+        <div className="mb-4 p-4 bg-emerald-900/30 border border-emerald-500/50 rounded-lg flex items-start gap-3 animate-fade-in">
+          <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+          <p className="text-emerald-300 text-sm font-medium">Job queued for processing</p>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Job Name */}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Target Disease */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            Job Name *
+          <label className="block text-sm font-semibold text-cyan-300 mb-2">
+            Target Disease <span className="text-red-400">*</span>
           </label>
           <input
             type="text"
             value={jobName}
             onChange={(e) => setJobName(e.target.value)}
-            placeholder="e.g., Ligand A vs Protein B"
-            className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+            placeholder="e.g., Breast Cancer, SARS-CoV-2, Alzheimer's Disease"
+            className="w-full px-4 py-2.5 bg-slate-900/80 border border-cyan-500/30 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-transparent font-mono text-sm"
           />
         </div>
 
         {/* File Uploads */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              Ligand File (.pdbqt) *
+            <label className="block text-sm font-semibold text-cyan-300 mb-2">
+              Ligand Structure <span className="text-red-400">*</span>
+              <span className="text-gray-500 text-xs ml-2">.pdbqt | .sdf</span>
             </label>
-            <input
-              type="file"
-              accept=".pdbqt,.sdf"
-              onChange={(e) => setLigandFile(e.target.files?.[0] || null)}
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-            />
-            {ligandFile && (
-              <p className="text-xs text-slate-400 mt-1">Selected: {ligandFile.name}</p>
-            )}
+            <div className="relative">
+              <input
+                type="file"
+                accept=".pdbqt,.sdf"
+                onChange={(e) => setLigandFile(e.target.files?.[0] || null)}
+                className="w-full px-4 py-2.5 bg-slate-900/80 border border-cyan-500/30 rounded-lg text-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 file:mr-3 file:px-4 file:py-1.5 file:border-0 file:rounded file:text-sm file:font-semibold file:bg-cyan-500/20 file:text-cyan-300 hover:file:bg-cyan-500/30 cursor-pointer font-mono"
+              />
+              {ligandFile && (
+                <p className="text-xs text-emerald-400 mt-2 flex items-center gap-1 font-mono">
+                  <CheckCircle className="w-3 h-3" /> {ligandFile.name}
+                </p>
+              )}
+            </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              Target File (.pdbqt) *
+            <label className="block text-sm font-semibold text-cyan-300 mb-2">
+              Receptor Structure <span className="text-red-400">*</span>
+              <span className="text-gray-500 text-xs ml-2">.pdbqt</span>
             </label>
-            <input
-              type="file"
-              accept=".pdbqt"
-              onChange={(e) => setTargetFile(e.target.files?.[0] || null)}
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-            />
-            {targetFile && (
-              <p className="text-xs text-slate-400 mt-1">Selected: {targetFile.name}</p>
-            )}
+            <div className="relative">
+              <input
+                type="file"
+                accept=".pdbqt"
+                onChange={(e) => setTargetFile(e.target.files?.[0] || null)}
+                className="w-full px-4 py-2.5 bg-slate-900/80 border border-cyan-500/30 rounded-lg text-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 file:mr-3 file:px-4 file:py-1.5 file:border-0 file:rounded file:text-sm file:font-semibold file:bg-cyan-500/20 file:text-cyan-300 hover:file:bg-cyan-500/30 cursor-pointer font-mono"
+              />
+              {targetFile && (
+                <p className="text-xs text-emerald-400 mt-2 flex items-center gap-1 font-mono">
+                  <CheckCircle className="w-3 h-3" /> {targetFile.name}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Vina Parameters */}
-        <div className="bg-slate-700/50 p-4 rounded-lg border border-slate-600">
-          <h3 className="text-sm font-semibold text-slate-200 mb-4">
-            AutoDock Vina Parameters
-          </h3>
+        {/* Grid Center Configuration */}
+        <div className="space-y-3 border-t border-cyan-500/20 pt-5">
+          <details className="group" open>
+            <summary className="text-sm font-semibold text-cyan-300 cursor-pointer hover:text-cyan-200 transition-colors flex items-center gap-2">
+              <Grid3x3 className="w-4 h-4" />
+              Grid Center & Box Dimensions
+            </summary>
+            <div className="mt-4 space-y-4">
+              {/* Grid Center Coordinates */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-400 mb-3 uppercase tracking-wider">Search Space Center (Å)</h4>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-cyan-400 mb-1.5">
+                      Center X
+                    </label>
+                    <input
+                      type="number"
+                      value={centerX}
+                      onChange={(e) => setCenterX(parseFloat(e.target.value))}
+                      step="0.1"
+                      className="w-full px-3 py-2 bg-slate-900/80 border border-cyan-500/30 rounded text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-cyan-400 mb-1.5">
+                      Center Y
+                    </label>
+                    <input
+                      type="number"
+                      value={centerY}
+                      onChange={(e) => setCenterY(parseFloat(e.target.value))}
+                      step="0.1"
+                      className="w-full px-3 py-2 bg-slate-900/80 border border-cyan-500/30 rounded text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-cyan-400 mb-1.5">
+                      Center Z
+                    </label>
+                    <input
+                      type="number"
+                      value={centerZ}
+                      onChange={(e) => setCenterZ(parseFloat(e.target.value))}
+                      step="0.1"
+                      className="w-full px-3 py-2 bg-slate-900/80 border border-cyan-500/30 rounded text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Center */}
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Center X
-              </label>
-              <input
-                type="number"
-                value={centerX}
-                onChange={(e) => setCenterX(parseFloat(e.target.value))}
-                step="0.1"
-                className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-white text-sm focus:outline-none focus:border-blue-400"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Center Y
-              </label>
-              <input
-                type="number"
-                value={centerY}
-                onChange={(e) => setCenterY(parseFloat(e.target.value))}
-                step="0.1"
-                className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-white text-sm focus:outline-none focus:border-blue-400"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Center Z
-              </label>
-              <input
-                type="number"
-                value={centerZ}
-                onChange={(e) => setCenterZ(parseFloat(e.target.value))}
-                step="0.1"
-                className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-white text-sm focus:outline-none focus:border-blue-400"
-              />
-            </div>
+              {/* Box Dimensions */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-400 mb-3 uppercase tracking-wider">Box Size (Å)</h4>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-emerald-400 mb-1.5">
+                      Size X
+                    </label>
+                    <input
+                      type="number"
+                      value={sizeX}
+                      onChange={(e) => setSizeX(parseFloat(e.target.value))}
+                      step="1"
+                      className="w-full px-3 py-2 bg-slate-900/80 border border-emerald-500/30 rounded text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-emerald-400 mb-1.5">
+                      Size Y
+                    </label>
+                    <input
+                      type="number"
+                      value={sizeY}
+                      onChange={(e) => setSizeY(parseFloat(e.target.value))}
+                      step="1"
+                      className="w-full px-3 py-2 bg-slate-900/80 border border-emerald-500/30 rounded text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-emerald-400 mb-1.5">
+                      Size Z
+                    </label>
+                    <input
+                      type="number"
+                      value={sizeZ}
+                      onChange={(e) => setSizeZ(parseFloat(e.target.value))}
+                      step="1"
+                      className="w-full px-3 py-2 bg-slate-900/80 border border-emerald-500/30 rounded text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
 
-            {/* Size */}
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Size X
-              </label>
-              <input
-                type="number"
-                value={sizeX}
-                onChange={(e) => setSizeX(parseFloat(e.target.value))}
-                step="1"
-                className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-white text-sm focus:outline-none focus:border-blue-400"
-              />
+              {/* Vina Algorithm Parameters */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-400 mb-3 uppercase tracking-wider">Algorithm Parameters</h4>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-blue-400 mb-1.5">
+                      Exhaustiveness
+                    </label>
+                    <input
+                      type="number"
+                      value={exhaustiveness}
+                      onChange={(e) => setExhaustiveness(parseInt(e.target.value))}
+                      min="1"
+                      max="32"
+                      className="w-full px-3 py-2 bg-slate-900/80 border border-blue-500/30 rounded text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-blue-400 mb-1.5">
+                      Num Modes
+                    </label>
+                    <input
+                      type="number"
+                      value={numModes}
+                      onChange={(e) => setNumModes(parseInt(e.target.value))}
+                      min="1"
+                      max="20"
+                      className="w-full px-3 py-2 bg-slate-900/80 border border-blue-500/30 rounded text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-blue-400 mb-1.5">
+                      Energy Range
+                    </label>
+                    <input
+                      type="number"
+                      value={energyRange}
+                      onChange={(e) => setEnergyRange(parseFloat(e.target.value))}
+                      step="0.1"
+                      className="w-full px-3 py-2 bg-slate-900/80 border border-blue-500/30 rounded text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Size Y
-              </label>
-              <input
-                type="number"
-                value={sizeY}
-                onChange={(e) => setSizeY(parseFloat(e.target.value))}
-                step="1"
-                className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-white text-sm focus:outline-none focus:border-blue-400"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Size Z
-              </label>
-              <input
-                type="number"
-                value={sizeZ}
-                onChange={(e) => setSizeZ(parseFloat(e.target.value))}
-                step="1"
-                className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-white text-sm focus:outline-none focus:border-blue-400"
-              />
-            </div>
-
-            {/* Advanced */}
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Exhaustiveness
-              </label>
-              <input
-                type="number"
-                value={exhaustiveness}
-                onChange={(e) => setExhaustiveness(parseInt(e.target.value))}
-                min="1"
-                className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-white text-sm focus:outline-none focus:border-blue-400"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Num Modes
-              </label>
-              <input
-                type="number"
-                value={numModes}
-                onChange={(e) => setNumModes(parseInt(e.target.value))}
-                min="1"
-                className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-white text-sm focus:outline-none focus:border-blue-400"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Energy Range
-              </label>
-              <input
-                type="number"
-                value={energyRange}
-                onChange={(e) => setEnergyRange(parseFloat(e.target.value))}
-                step="0.1"
-                className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-white text-sm focus:outline-none focus:border-blue-400"
-              />
-            </div>
-          </div>
+          </details>
         </div>
 
         {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white font-semibold rounded-lg transition-colors"
+          className="w-full px-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-bold rounded-lg transition-all duration-200 shadow-lg hover:shadow-cyan-500/50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] font-mono uppercase tracking-wider text-sm"
         >
-          {loading ? 'Submitting...' : 'Submit Docking Job'}
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              Processing...
+            </span>
+          ) : (
+            'Submit to Queue'
+          )}
         </button>
+
+        <p className="text-xs text-gray-500 text-center font-mono">
+          Estimated runtime: 5-15 minutes per ligand
+        </p>
       </form>
     </div>
   );

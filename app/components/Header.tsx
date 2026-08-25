@@ -1,47 +1,37 @@
 import React from 'react';
-import { Beaker, Github } from 'lucide-react';
+import { Atom, Github } from 'lucide-react';
 
 export default function Header() {
   return (
-    <header className="bg-slate-900/50 border-b border-slate-700 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <header className="border-b border-cyan-900/40 bg-slate-900/95 backdrop-blur-md sticky top-0 z-50 shadow-lg shadow-cyan-900/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg">
-              <Beaker className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-4">
+            <div className="p-2.5 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-lg border border-cyan-500/40 shadow-lg shadow-cyan-500/20">
+              <Atom className="w-6 h-6 text-cyan-300" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">dockGOAT</h1>
-              <p className="text-slate-400 text-sm">Molecular Docking Platform</p>
+              <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-emerald-300 tracking-tight">
+                dockGOAT
+              </h1>
+              <p className="text-xs text-gray-400 font-mono tracking-wider">COMPUTATIONAL DRUG DISCOVERY</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
-              title="GitHub"
+          <nav className="flex items-center gap-6 text-sm">
+            <a 
+              href="https://github.com/VIBEGOAT/dockGOAT" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center gap-2 text-gray-400 hover:text-cyan-300 font-medium transition-colors"
             >
-              <Github className="w-5 h-5 text-slate-300" />
+              <Github className="w-4 h-4" />
+              <span className="hidden sm:inline">Repository</span>
             </a>
-          </div>
-        </div>
-
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
-            <p className="text-slate-400 text-sm">Database</p>
-            <p className="text-white font-semibold">MongoDB Atlas</p>
-          </div>
-          <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
-            <p className="text-slate-400 text-sm">Storage</p>
-            <p className="text-white font-semibold">Supabase</p>
-          </div>
-          <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
-            <p className="text-slate-400 text-sm">Compute</p>
-            <p className="text-white font-semibold">HF Spaces</p>
-          </div>
+            <a href="#" className="text-gray-400 hover:text-cyan-300 font-medium transition-colors font-mono">
+              DOCS
+            </a>
+          </nav>
         </div>
       </div>
     </header>
