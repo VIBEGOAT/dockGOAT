@@ -10,7 +10,7 @@ pymongo==4.6.0
 supabase==2.4.2
 
 # Molecular docking
-meeko==0.5.2
+meeko
 vina==1.2.5
 rdkit==2023.09.1
 
