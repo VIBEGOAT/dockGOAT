@@ -1,28 +1,21 @@
 # FastAPI and async server
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-pydantic==2.5.0
+fastapi
+uvicorn[standard]
+pydantic
 
 # MongoDB
-pymongo==4.6.0
+pymongo
 
-# Supabase (replaces boto3 for S3-compatible storage)
+# Supabase
 supabase
 
 # Molecular docking
 meeko
 vina
-rdkit==2023.09.1
+rdkit
 
 # File handling
-biopython==1.82
+biopython
 
 # Utilities
-requests==2.31.0
-python-dotenv==1.0.0
-
-# HTTP client for async operations
-httpx==0.25.2
-
-# Logging
-python-json-logger==2.0.7
+requests
