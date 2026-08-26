@@ -97,7 +97,7 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
           <Upload className="w-6 h-6 text-blue-600 dark:text-blue-400" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-black dark:text-white">Submit Docking Job</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Submit Docking Job</h2>
           <p className="text-sm text-gray-600 dark:text-gray-400">PDBQT format required</p>
         </div>
       </div>
@@ -127,7 +127,7 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Target Disease */}
         <div>
-          <label className="block text-sm font-semibold text-black dark:text-white mb-2">
+          <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
             Target Disease <span className="text-red-500">*</span>
           </label>
           <input
@@ -135,14 +135,14 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
             value={jobName}
             onChange={(e) => setJobName(e.target.value)}
             placeholder="e.g., Breast Cancer, COVID-19, Alzheimer's"
-            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50 focus:border-transparent transition-all"
           />
         </div>
 
         {/* File Uploads */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-black dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
               Ligand Structure <span className="text-red-500">*</span>
               <span className="text-gray-500 dark:text-gray-500 text-xs ml-2">.pdbqt | .sdf</span>
             </label>
@@ -162,7 +162,7 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-black dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
               Receptor Structure <span className="text-red-500">*</span>
               <span className="text-gray-500 dark:text-gray-500 text-xs ml-2">.pdbqt</span>
             </label>
@@ -184,7 +184,7 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
 
         {/* Advanced Parameters */}
         <details className="group">
-          <summary className="text-sm font-semibold text-black dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 select-none">
+          <summary className="text-sm font-semibold text-slate-900 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 select-none">
             <Grid3x3 className="w-4 h-4" />
             Grid Center & Advanced Parameters
           </summary>
@@ -207,7 +207,7 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
                       value={coord.value}
                       onChange={(e) => coord.setter(parseFloat(e.target.value))}
                       step="0.1"
-                      className="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-black dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50"
+                      className="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50"
                     />
                   </div>
                 ))}
@@ -232,7 +232,7 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
                       value={size.value}
                       onChange={(e) => size.setter(parseFloat(e.target.value))}
                       step="1"
-                      className="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-black dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50"
+                      className="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50"
                     />
                   </div>
                 ))}

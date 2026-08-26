@@ -106,7 +106,7 @@ export default function JobList({ refreshTrigger }: JobListProps) {
             <Database className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </motion.div>
           <div>
-            <h2 className="text-xl font-bold text-black dark:text-white">Processing Queue</h2>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Processing Queue</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400">Real-time job monitoring</p>
           </div>
         </div>
@@ -176,11 +176,11 @@ export default function JobList({ refreshTrigger }: JobListProps) {
                       {getStatusIcon(job.status)}
                     </motion.div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-black dark:text-white text-lg mb-1">{job.jobName}</h3>
+                      <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-1">{job.jobName}</h3>
                       <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
                           <p className="text-gray-500 dark:text-gray-600 text-xs uppercase tracking-wider mb-1">Status</p>
-                          <p className="text-black dark:text-white font-semibold text-xs">{job.status}</p>
+                          <p className="text-slate-900 dark:text-white font-semibold text-xs">{job.status}</p>
                         </div>
                         <div>
                           <p className="text-gray-500 dark:text-gray-600 text-xs uppercase tracking-wider mb-1">Job ID</p>

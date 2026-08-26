@@ -48,7 +48,7 @@ export default function Header() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl bg-white/75 dark:bg-black/75 border-b border-black/[0.06] dark:border-white/[0.08]"
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/70 dark:bg-black/70 border-b border-black/[0.06] dark:border-white/[0.08]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div className="flex items-center justify-between">

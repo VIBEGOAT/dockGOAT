@@ -2,29 +2,32 @@
 
 /* ─── Design tokens ────────────────────────────────────────────────────────── */
 :root {
-  /* Surfaces */
+  /* Surfaces — Apple off-white, not pure white */
   --bg:          #fbfbfd;
   --bg-elevated: #ffffff;
   --bg-inset:    #f2f2f7;
 
-  /* Text */
-  --fg:          #1d1d1f;
+  /* Text hierarchy */
+  --fg:          #1d1d1f;   /* slate-900 equivalent */
   --fg-secondary:#6e6e73;
   --fg-tertiary: #a1a1a6;
 
-  /* Accent */
+  /* Accent — Apple blue */
   --accent:      #0071e3;
-  --accent-dark: #0077ed;
+  --accent-hover:#0077ed;
 
-  /* Borders & shadows */
+  /* Borders */
   --border:      rgba(0, 0, 0, 0.06);
   --border-mid:  rgba(0, 0, 0, 0.10);
+
+  /* Shadows — light, diffuse */
   --shadow-sm:   0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
   --shadow-md:   0 2px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.06);
   --shadow-lg:   0 4px 24px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.08);
 }
 
 .dark {
+  /* Surfaces — OLED black */
   --bg:          #000000;
   --bg-elevated: #111111;
   --bg-inset:    #1c1c1e;
@@ -34,16 +37,17 @@
   --fg-tertiary: #6e6e73;
 
   --accent:      #2997ff;
-  --accent-dark: #409cff;
+  --accent-hover:#409cff;
 
   --border:      rgba(255, 255, 255, 0.07);
   --border-mid:  rgba(255, 255, 255, 0.12);
+
   --shadow-sm:   0 1px 3px rgba(0,0,0,0.3),  0 4px 16px rgba(0,0,0,0.25);
   --shadow-md:   0 2px 8px rgba(0,0,0,0.5),  0 12px 32px rgba(0,0,0,0.4);
   --shadow-lg:   0 4px 24px rgba(0,0,0,0.6), 0 24px 64px rgba(0,0,0,0.5);
 }
 
-/* Expose tokens to Tailwind 4 @theme */
+/* Expose to Tailwind 4 @theme */
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--fg);
@@ -70,24 +74,44 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth theme transitions — only on intentional property changes */
-*,
-*::before,
-*::after {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-duration: 350ms;
+/*
+  Theme transition — ONLY on layout/surface elements, NOT on all elements.
+  Applying to * breaks Framer Motion (it fights the CSS transition on transforms
+  and opacity) and causes SVG icon colors to lag during animation.
+*/
+html,
+body,
+header,
+main,
+section,
+footer,
+nav,
+aside,
+article,
+div,
+p,
+h1, h2, h3, h4, h5, h6,
+span,
+a,
+button,
+input,
+label,
+details,
+summary {
+  transition-property: background-color, border-color, color;
+  transition-duration: 300ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Never transition transforms/opacity via the wildcard (breaks animations) */
-.motion-safe\:transition-none {
-  transition: none !important;
+/* SVG elements must NOT inherit the color transition — it fights icon animations */
+svg, path, circle, line, polyline, polygon, rect {
+  transition: none;
 }
 
 /* ─── Selection ────────────────────────────────────────────────────────────── */
 ::selection {
   background-color: var(--accent);
-  color: #fff;
+  color: #ffffff;
 }
 
 /* ─── Scrollbar (Webkit) ───────────────────────────────────────────────────── */
@@ -112,6 +136,6 @@ body {
   50%       { transform: translateY(-8px); }
 }
 
-.animate-fade-up   { animation: fade-up  0.6s cubic-bezier(0.4,0,0.2,1) both; }
-.animate-fade-in   { animation: fade-in  0.4s cubic-bezier(0.4,0,0.2,1) both; }
-.animate-float     { animation: float    4s   ease-in-out infinite; }
+.animate-fade-up { animation: fade-up 0.6s cubic-bezier(0.4,0,0.2,1) both; }
+.animate-fade-in { animation: fade-in 0.4s cubic-bezier(0.4,0,0.2,1) both; }
+.animate-float   { animation: float   4s  ease-in-out infinite; }
