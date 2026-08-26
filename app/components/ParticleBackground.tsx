@@ -58,7 +58,7 @@ export default function ParticleBackground() {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Check dark mode and set particle color
+      // Check dark mode and set particle/stroke color
       const isDark = document.documentElement.classList.contains('dark');
       ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)';
 
@@ -105,7 +105,6 @@ export default function ParticleBackground() {
       });
 
       // Draw connections between nearby particles
-      const isDark = document.documentElement.classList.contains('dark');
       ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
       ctx.lineWidth = 0.5;
 
