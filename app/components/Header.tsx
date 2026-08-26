@@ -48,7 +48,7 @@ export default function Header() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/70 dark:bg-black/70 border-b border-black/[0.06] dark:border-white/[0.08]"
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/80 dark:bg-black/80 border-b border-black/[0.06] dark:border-white/[0.08]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div className="flex items-center justify-between">
@@ -65,10 +65,10 @@ export default function Header() {
 
             {/* Word mark */}
             <div className="leading-none">
-              <span className="block text-[15px] font-semibold tracking-tight text-gray-900 dark:text-white">
+              <span className="block text-[15px] font-semibold tracking-tight text-[#1d1d1f] dark:text-white">
                 dockGOAT
               </span>
-              <span className="block text-[11px] text-gray-500 dark:text-gray-500 font-medium mt-px">
+              <span className="block text-[11px] text-[#86868b] dark:text-[#86868b] font-medium mt-px">
                 Molecular Docking
               </span>
             </div>
@@ -80,14 +80,14 @@ export default function Header() {
             <motion.a
               whileHover={{ y: -1 }}
               href="#concepts"
-              className="hidden sm:block text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium px-2 py-1 rounded-lg transition-colors"
+              className="hidden sm:block text-sm text-[#6e6e73] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-white font-medium px-2 py-1 rounded-lg transition-colors"
             >
               Concepts
             </motion.a>
             <motion.a
               whileHover={{ y: -1 }}
               href="#workspace"
-              className="hidden sm:block text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium px-2 py-1 rounded-lg transition-colors"
+              className="hidden sm:block text-sm text-[#6e6e73] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-white font-medium px-2 py-1 rounded-lg transition-colors"
             >
               Workspace
             </motion.a>
@@ -105,7 +105,7 @@ export default function Header() {
               href="https://github.com/VIBEGOAT/dockGOAT"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-black/[0.05] dark:bg-white/[0.08] text-gray-700 dark:text-gray-300 hover:bg-black/[0.09] dark:hover:bg-white/[0.14] border border-black/[0.06] dark:border-white/[0.08] transition-colors font-medium text-sm"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-black/[0.05] dark:bg-white/[0.08] text-[#1d1d1f] dark:text-[#e5e5e7] hover:bg-black/[0.09] dark:hover:bg-white/[0.14] border border-black/[0.10] dark:border-white/[0.08] transition-colors font-medium text-sm"
             >
               <Github className="w-4 h-4" strokeWidth={1.8} />
               <span className="hidden sm:inline">GitHub</span>

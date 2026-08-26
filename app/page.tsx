@@ -21,7 +21,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <div className="relative z-10 min-h-screen text-slate-900 dark:text-white">
+      <div className="relative z-10 min-h-screen text-[#1d1d1f] dark:text-white">
         {/* Fixed canvas background */}
         <ParticleBackground />
 
@@ -49,10 +49,10 @@ export default function App() {
               transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
               className="mb-16 text-center"
             >
-              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white tracking-tight mb-4">
+              <h2 className="text-4xl sm:text-5xl font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-4">
                 Virtual Screening Workstation
               </h2>
-              <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+              <p className="text-lg text-[#6e6e73] dark:text-[#a1a1a6] max-w-2xl mx-auto">
                 Configure docking parameters and monitor the processing queue in real-time.
               </p>
             </motion.div>
