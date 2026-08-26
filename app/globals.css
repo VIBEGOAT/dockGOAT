@@ -100,9 +100,6 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
-/* Smooth scroll anchor behavior */
-scroll-behavior: smooth;
-
 /* Selection styling */
 ::selection {
   background-color: var(--accent);
