@@ -21,7 +21,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <div className="relative min-h-screen bg-[var(--bg)] text-[var(--fg)]">
+      <div className="relative min-h-screen bg-[var(--bg)] text-[var(--fg)] transition-colors duration-300">
         {/* Fixed canvas background */}
         <ParticleBackground />
 

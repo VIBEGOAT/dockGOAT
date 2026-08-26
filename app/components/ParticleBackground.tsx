@@ -216,7 +216,7 @@ export default function ParticleBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none bg-[#f5f5f7] dark:bg-black transition-colors duration-500"
+      className="fixed inset-0 pointer-events-none"
     />
   );
 }

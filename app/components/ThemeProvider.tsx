@@ -14,38 +14,40 @@ const ThemeContext = createContext<ThemeContextType>({
   toggleTheme: () => {},
 });
 
-function applyTheme(theme: Theme) {
-  const root = document.documentElement;
-  if (theme === 'dark') {
-    root.classList.add('dark');
+/** Applies theme class to <html> and persists to localStorage. */
+function applyTheme(t: Theme) {
+  if (t === 'dark') {
+    document.documentElement.classList.add('dark');
   } else {
-    root.classList.remove('dark');
+    document.documentElement.classList.remove('dark');
   }
+  localStorage.setItem('theme', t);
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light');
-  const [mounted, setMounted] = useState(false);
+  // Initialise from the class already stamped by the blocking <head> script
+  // so the very first render uses the correct value — no extra effect needed.
+  const [theme, setTheme] = useState<Theme>(() => {
+    // useState initialiser only runs on the client, so document is available
+    if (typeof document !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    }
+    return 'light';
+  });
 
+  // Keep state in sync if something outside (e.g., OS preference) changes it
   useEffect(() => {
-    // Read what the inline script already applied, so React state matches DOM
     const stored = localStorage.getItem('theme') as Theme | null;
-    const initial: Theme = stored === 'dark' ? 'dark' : 'light';
-    setTheme(initial);
-    applyTheme(initial);
-    setMounted(true);
+    const resolved: Theme = stored === 'dark' ? 'dark' : 'light';
+    setTheme(resolved);
+    applyTheme(resolved);
   }, []);
 
   const toggleTheme = () => {
     const next: Theme = theme === 'light' ? 'dark' : 'light';
     setTheme(next);
-    localStorage.setItem('theme', next);
     applyTheme(next);
   };
-
-  // Render children immediately — the inline script in <head> already set the
-  // correct class before paint, so there is no flash. We just keep state in sync.
-  if (!mounted) return <>{children}</>;
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
