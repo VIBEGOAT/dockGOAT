@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Tell Tailwind 4 to use class-based dark mode, not media query */
+@variant dark (&:where(.dark, .dark *));
+
 /* ─── Design tokens ─────────────────────────────────────────────────────── */
 :root {
   --bg:           #F5F5F7;
