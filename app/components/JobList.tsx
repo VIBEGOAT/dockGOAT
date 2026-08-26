@@ -94,7 +94,7 @@ export default function JobList({ refreshTrigger }: JobListProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="rounded-3xl bg-white dark:bg-[#1c1c1e] border border-black/5 dark:border-white/10 p-8 shadow-sm"
+      className="rounded-3xl bg-white dark:bg-[#1c1c1e] border border-black/[0.06] dark:border-white/10 p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-none"
     >
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
@@ -106,12 +106,12 @@ export default function JobList({ refreshTrigger }: JobListProps) {
             <Database className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </motion.div>
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Processing Queue</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Real-time job monitoring</p>
+            <h2 className="text-xl font-bold text-[#1D1D1F] dark:text-white">Processing Queue</h2>
+            <p className="text-sm text-[#86868B] dark:text-[#a1a1a6]">Real-time job monitoring</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 font-medium cursor-pointer">
+          <label className="flex items-center gap-2 text-sm text-[#3a3a3c] dark:text-[#a1a1a6] font-medium cursor-pointer">
             <input
               type="checkbox"
               checked={autoRefresh}
@@ -131,7 +131,7 @@ export default function JobList({ refreshTrigger }: JobListProps) {
               animate={loading ? { rotate: 360 } : {}}
               transition={{ duration: 1, repeat: loading ? Infinity : 0, ease: "linear" }}
             >
-              <RefreshCw className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+              <RefreshCw className="w-5 h-5 text-[#3a3a3c] dark:text-[#a1a1a6]" />
             </motion.div>
           </motion.button>
         </div>
@@ -144,15 +144,15 @@ export default function JobList({ refreshTrigger }: JobListProps) {
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             className="inline-block"
           >
-            <RefreshCw className="w-8 h-8 text-gray-400 dark:text-gray-600" />
+            <RefreshCw className="w-8 h-8 text-[#86868B] dark:text-[#6e6e73]" />
           </motion.div>
-          <p className="text-gray-600 dark:text-gray-400 mt-4 font-medium">Loading jobs...</p>
+          <p className="text-[#3a3a3c] dark:text-[#a1a1a6] mt-4 font-medium">Loading jobs...</p>
         </div>
       ) : jobs.length === 0 ? (
-        <div className="text-center py-16 bg-gray-50 dark:bg-black/20 rounded-2xl">
-          <Database className="w-12 h-12 text-gray-300 dark:text-gray-700 mx-auto mb-3" />
-          <p className="text-gray-600 dark:text-gray-400 font-medium">No jobs in queue</p>
-          <p className="text-sm text-gray-500 dark:text-gray-600 mt-1">Submit a job to get started</p>
+        <div className="text-center py-16 bg-[#F5F5F7] dark:bg-black/20 rounded-2xl">
+          <Database className="w-12 h-12 text-[#a1a1a6] dark:text-[#3a3a3c] mx-auto mb-3" />
+          <p className="text-[#3a3a3c] dark:text-[#a1a1a6] font-medium">No jobs in queue</p>
+          <p className="text-sm text-[#86868B] dark:text-[#6e6e73] mt-1">Submit a job to get started</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -176,21 +176,21 @@ export default function JobList({ refreshTrigger }: JobListProps) {
                       {getStatusIcon(job.status)}
                     </motion.div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-1">{job.jobName}</h3>
+                      <h3 className="font-bold text-[#1D1D1F] dark:text-white text-lg mb-1">{job.jobName}</h3>
                       <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
-                          <p className="text-gray-500 dark:text-gray-600 text-xs uppercase tracking-wider mb-1">Status</p>
-                          <p className="text-slate-900 dark:text-white font-semibold text-xs">{job.status}</p>
+                          <p className="text-[#86868B] dark:text-[#6e6e73] text-xs uppercase tracking-wider mb-1">Status</p>
+                          <p className="text-[#1D1D1F] dark:text-white font-semibold text-xs">{job.status}</p>
                         </div>
                         <div>
-                          <p className="text-gray-500 dark:text-gray-600 text-xs uppercase tracking-wider mb-1">Job ID</p>
-                          <p className="text-gray-700 dark:text-gray-400 font-mono text-xs truncate">
+                          <p className="text-[#86868B] dark:text-[#6e6e73] text-xs uppercase tracking-wider mb-1">Job ID</p>
+                          <p className="text-[#3a3a3c] dark:text-[#a1a1a6] font-mono text-xs truncate">
                             {job._id.substring(0, 8)}...
                           </p>
                         </div>
                         <div>
-                          <p className="text-gray-500 dark:text-gray-600 text-xs uppercase tracking-wider mb-1">Created</p>
-                          <p className="text-gray-700 dark:text-gray-400 text-xs">{formatDate(job.createdAt)}</p>
+                          <p className="text-[#86868B] dark:text-[#6e6e73] text-xs uppercase tracking-wider mb-1">Created</p>
+                          <p className="text-[#3a3a3c] dark:text-[#a1a1a6] text-xs">{formatDate(job.createdAt)}</p>
                         </div>
                         {job.bestAffinity !== undefined && (
                           <motion.div
@@ -198,7 +198,7 @@ export default function JobList({ refreshTrigger }: JobListProps) {
                             animate={{ scale: 1 }}
                             transition={{ type: "spring", stiffness: 200 }}
                           >
-                            <p className="text-gray-500 dark:text-gray-600 text-xs uppercase tracking-wider mb-1">Affinity</p>
+                            <p className="text-[#86868B] dark:text-[#6e6e73] text-xs uppercase tracking-wider mb-1">Affinity</p>
                             <p className="text-green-600 dark:text-green-400 font-bold text-sm">{job.bestAffinity.toFixed(2)} kcal/mol</p>
                           </motion.div>
                         )}
@@ -241,7 +241,7 @@ export default function JobList({ refreshTrigger }: JobListProps) {
         transition={{ delay: 0.5 }}
         className="mt-6 pt-6 border-t border-black/5 dark:border-white/10 text-center"
       >
-        <p className="text-gray-500 dark:text-gray-600 text-xs">
+        <p className="text-[#86868B] dark:text-[#6e6e73] text-xs">
           {jobs.length} job{jobs.length !== 1 ? 's' : ''} in queue • Polling interval: 5s
         </p>
       </motion.div>

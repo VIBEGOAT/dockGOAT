@@ -16,7 +16,6 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // Vina parameters
   const [centerX, setCenterX] = useState(0);
   const [centerY, setCenterY] = useState(0);
   const [centerZ, setCenterZ] = useState(0);
@@ -31,52 +30,39 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
     e.preventDefault();
     setError(null);
     setSuccess(false);
-
     if (!jobName || !ligandFile || !targetFile) {
       setError('All fields required: target disease, ligand file, and receptor file');
       return;
     }
-
     setLoading(true);
-
     try {
       const formData = new FormData();
       formData.append('userId', 'demo-user');
       formData.append('jobName', jobName);
       formData.append('ligandFile', ligandFile);
       formData.append('targetFile', targetFile);
-      formData.append(
-        'vinaParams',
-        JSON.stringify({
-          centerX: parseFloat(centerX.toString()),
-          centerY: parseFloat(centerY.toString()),
-          centerZ: parseFloat(centerZ.toString()),
-          sizeX: parseFloat(sizeX.toString()),
-          sizeY: parseFloat(sizeY.toString()),
-          sizeZ: parseFloat(sizeZ.toString()),
-          exhaustiveness: parseInt(exhaustiveness.toString()),
-          numModes: parseInt(numModes.toString()),
-          energyRange: parseFloat(energyRange.toString()),
-        })
-      );
-
-      const response = await fetch('/api/jobs', {
-        method: 'POST',
-        body: formData,
-      });
-
+      formData.append('vinaParams', JSON.stringify({
+        centerX: parseFloat(centerX.toString()),
+        centerY: parseFloat(centerY.toString()),
+        centerZ: parseFloat(centerZ.toString()),
+        sizeX: parseFloat(sizeX.toString()),
+        sizeY: parseFloat(sizeY.toString()),
+        sizeZ: parseFloat(sizeZ.toString()),
+        exhaustiveness: parseInt(exhaustiveness.toString()),
+        numModes: parseInt(numModes.toString()),
+        energyRange: parseFloat(energyRange.toString()),
+      }));
+      const response = await fetch('/api/jobs', { method: 'POST', body: formData });
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.error || 'Job submission failed');
       }
-
       const data = await response.json();
       setSuccess(true);
       setJobName('');
       setLigandFile(null);
       setTargetFile(null);
       onJobSubmitted(data.jobId);
-
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Submission error');
@@ -86,19 +72,19 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="rounded-3xl bg-white dark:bg-[#1c1c1e] border border-black/5 dark:border-white/10 p-8 shadow-sm"
+      className="rounded-3xl bg-white dark:bg-[#1c1c1e] border border-black/[0.06] dark:border-white/10 p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-none"
     >
       <div className="flex items-center gap-4 mb-8">
         <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center">
           <Upload className="w-6 h-6 text-blue-600 dark:text-blue-400" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Submit Docking Job</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400">PDBQT format required</p>
+          <h2 className="text-xl font-bold text-[#1D1D1F] dark:text-white">Submit Docking Job</h2>
+          <p className="text-sm text-[#86868B] dark:text-[#a1a1a6]">PDBQT format required</p>
         </div>
       </div>
 
@@ -125,9 +111,8 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Target Disease */}
         <div>
-          <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+          <label className="block text-sm font-semibold text-[#1D1D1F] dark:text-white mb-2">
             Target Disease <span className="text-red-500">*</span>
           </label>
           <input
@@ -135,63 +120,56 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
             value={jobName}
             onChange={(e) => setJobName(e.target.value)}
             placeholder="e.g., Breast Cancer, COVID-19, Alzheimer's"
-            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 rounded-xl bg-[#F5F5F7] dark:bg-black/40 border border-black/[0.08] dark:border-white/10 text-[#1D1D1F] dark:text-white placeholder-[#86868B] dark:placeholder-[#6e6e73] focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/50 focus:border-transparent transition-all"
           />
         </div>
 
-        {/* File Uploads */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-[#1D1D1F] dark:text-white mb-2">
               Ligand Structure <span className="text-red-500">*</span>
-              <span className="text-gray-500 dark:text-gray-500 text-xs ml-2">.pdbqt | .sdf</span>
+              <span className="text-[#86868B] dark:text-[#6e6e73] text-xs ml-2">.pdbqt | .sdf</span>
             </label>
-            <div className="relative">
-              <input
-                type="file"
-                accept=".pdbqt,.sdf"
-                onChange={(e) => setLigandFile(e.target.files?.[0] || null)}
-                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50 file:mr-3 file:px-4 file:py-1.5 file:border-0 file:rounded-lg file:text-sm file:font-semibold file:bg-blue-50 dark:file:bg-blue-500/10 file:text-blue-600 dark:file:text-blue-400 hover:file:bg-blue-100 dark:hover:file:bg-blue-500/20 cursor-pointer"
-              />
-              {ligandFile && (
-                <p className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center gap-1">
-                  <CheckCircle className="w-3 h-3" /> {ligandFile.name}
-                </p>
-              )}
-            </div>
+            <input
+              type="file"
+              accept=".pdbqt,.sdf"
+              onChange={(e) => setLigandFile(e.target.files?.[0] || null)}
+              className="w-full px-4 py-3 rounded-xl bg-[#F5F5F7] dark:bg-black/40 border border-black/[0.08] dark:border-white/10 text-[#3a3a3c] dark:text-[#a1a1a6] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/50 file:mr-3 file:px-4 file:py-1.5 file:border-0 file:rounded-lg file:text-sm file:font-semibold file:bg-blue-50 dark:file:bg-blue-500/10 file:text-blue-600 dark:file:text-blue-400 hover:file:bg-blue-100 dark:hover:file:bg-blue-500/20 cursor-pointer"
+            />
+            {ligandFile && (
+              <p className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center gap-1">
+                <CheckCircle className="w-3 h-3" /> {ligandFile.name}
+              </p>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-[#1D1D1F] dark:text-white mb-2">
               Receptor Structure <span className="text-red-500">*</span>
-              <span className="text-gray-500 dark:text-gray-500 text-xs ml-2">.pdbqt</span>
+              <span className="text-[#86868B] dark:text-[#6e6e73] text-xs ml-2">.pdbqt</span>
             </label>
-            <div className="relative">
-              <input
-                type="file"
-                accept=".pdbqt"
-                onChange={(e) => setTargetFile(e.target.files?.[0] || null)}
-                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50 file:mr-3 file:px-4 file:py-1.5 file:border-0 file:rounded-lg file:text-sm file:font-semibold file:bg-blue-50 dark:file:bg-blue-500/10 file:text-blue-600 dark:file:text-blue-400 hover:file:bg-blue-100 dark:hover:file:bg-blue-500/20 cursor-pointer"
-              />
-              {targetFile && (
-                <p className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center gap-1">
-                  <CheckCircle className="w-3 h-3" /> {targetFile.name}
-                </p>
-              )}
-            </div>
+            <input
+              type="file"
+              accept=".pdbqt"
+              onChange={(e) => setTargetFile(e.target.files?.[0] || null)}
+              className="w-full px-4 py-3 rounded-xl bg-[#F5F5F7] dark:bg-black/40 border border-black/[0.08] dark:border-white/10 text-[#3a3a3c] dark:text-[#a1a1a6] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/50 file:mr-3 file:px-4 file:py-1.5 file:border-0 file:rounded-lg file:text-sm file:font-semibold file:bg-blue-50 dark:file:bg-blue-500/10 file:text-blue-600 dark:file:text-blue-400 hover:file:bg-blue-100 dark:hover:file:bg-blue-500/20 cursor-pointer"
+            />
+            {targetFile && (
+              <p className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center gap-1">
+                <CheckCircle className="w-3 h-3" /> {targetFile.name}
+              </p>
+            )}
           </div>
         </div>
 
-        {/* Advanced Parameters */}
         <details className="group">
-          <summary className="text-sm font-semibold text-slate-900 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 select-none">
+          <summary className="text-sm font-semibold text-[#1D1D1F] dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 select-none">
             <Grid3x3 className="w-4 h-4" />
-            Grid Center & Advanced Parameters
+            Grid Center &amp; Advanced Parameters
           </summary>
           <div className="mt-4 space-y-4 pl-6">
-            {/* Grid Center */}
             <div>
-              <h4 className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3 uppercase tracking-wider">Search Space Center (Å)</h4>
+              <h4 className="text-xs font-semibold text-[#86868B] dark:text-[#a1a1a6] mb-3 uppercase tracking-wider">Search Space Center (Å)</h4>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { label: 'X', value: centerX, setter: setCenterX },
@@ -199,24 +177,20 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
                   { label: 'Z', value: centerZ, setter: setCenterZ },
                 ].map((coord) => (
                   <div key={coord.label}>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">
-                      Center {coord.label}
-                    </label>
+                    <label className="block text-xs font-medium text-[#3a3a3c] dark:text-[#a1a1a6] mb-1.5">Center {coord.label}</label>
                     <input
                       type="number"
                       value={coord.value}
                       onChange={(e) => coord.setter(parseFloat(e.target.value))}
                       step="0.1"
-                      className="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50"
+                      className="w-full px-3 py-2 rounded-lg bg-[#F5F5F7] dark:bg-black/40 border border-black/[0.08] dark:border-white/10 text-[#1D1D1F] dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/50"
                     />
                   </div>
                 ))}
               </div>
             </div>
-
-            {/* Box Size */}
             <div>
-              <h4 className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3 uppercase tracking-wider">Box Size (Å)</h4>
+              <h4 className="text-xs font-semibold text-[#86868B] dark:text-[#a1a1a6] mb-3 uppercase tracking-wider">Box Size (Å)</h4>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { label: 'X', value: sizeX, setter: setSizeX },
@@ -224,15 +198,13 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
                   { label: 'Z', value: sizeZ, setter: setSizeZ },
                 ].map((size) => (
                   <div key={size.label}>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">
-                      Size {size.label}
-                    </label>
+                    <label className="block text-xs font-medium text-[#3a3a3c] dark:text-[#a1a1a6] mb-1.5">Size {size.label}</label>
                     <input
                       type="number"
                       value={size.value}
                       onChange={(e) => size.setter(parseFloat(e.target.value))}
                       step="1"
-                      className="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50"
+                      className="w-full px-3 py-2 rounded-lg bg-[#F5F5F7] dark:bg-black/40 border border-black/[0.08] dark:border-white/10 text-[#1D1D1F] dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/50"
                     />
                   </div>
                 ))}
@@ -241,33 +213,25 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
           </div>
         </details>
 
-        {/* Submit Button */}
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
           type="submit"
           disabled={loading}
-          className="w-full px-6 py-3.5 rounded-full bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-gray-400 dark:disabled:bg-gray-700 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+          className="w-full px-6 py-3.5 rounded-full bg-[#1D1D1F] hover:bg-black dark:bg-blue-500 dark:hover:bg-blue-600 disabled:bg-[#86868B] dark:disabled:bg-[#3a3a3c] text-white font-semibold transition-all duration-200 shadow-lg disabled:cursor-not-allowed"
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
-              <motion.svg
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-              >
+              <motion.svg animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="h-5 w-5" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </motion.svg>
               Processing...
             </span>
-          ) : (
-            'Submit to Queue'
-          )}
+          ) : 'Submit to Queue'}
         </motion.button>
 
-        <p className="text-xs text-gray-500 dark:text-gray-600 text-center">
+        <p className="text-xs text-[#86868B] dark:text-[#6e6e73] text-center">
           Estimated runtime: 5-15 minutes per ligand
         </p>
       </form>

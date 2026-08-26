@@ -28,7 +28,7 @@ export default function TechStack() {
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="mb-10 text-center"
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#86868B] dark:text-[#6e6e73]">
             Built with
           </p>
         </motion.div>
@@ -53,10 +53,10 @@ export default function TechStack() {
               whileHover={{ backgroundColor: 'rgba(0,0,0,0.015)' }}
               className="group flex flex-col items-center justify-center gap-1 px-4 py-6 bg-white dark:bg-[#0a0a0a] transition-colors duration-200"
             >
-              <span className="text-sm font-semibold text-gray-800 dark:text-gray-200 text-center leading-snug">
+              <span className="text-sm font-semibold text-[#1D1D1F] dark:text-[#e5e5e7] text-center leading-snug">
                 {item.name}
               </span>
-              <span className="text-[11px] text-gray-400 dark:text-gray-600 text-center leading-snug hidden sm:block">
+              <span className="text-[11px] text-[#86868B] dark:text-[#6e6e73] text-center leading-snug hidden sm:block">
                 {item.detail}
               </span>
             </motion.div>
