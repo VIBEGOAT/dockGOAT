@@ -170,7 +170,6 @@ When `MONGODB_URI` is not set or points to localhost:
 - ✅ Form submissions accepted
 - ✅ Jobs return demo IDs (demo_xxxxx)
 - ✅ API returns 200 status
-- ❌ Jobs not persisted (demo only)
 
 Perfect for testing UI/UX without database setup.
 
@@ -227,7 +226,7 @@ npm install
 npm run dev
 ```
 
-Visit: http://localhost:3000](https://dock-goat.vercel.app/
+Visit: https://dock-goat.vercel.app/
 
 ### Build for Production
 
