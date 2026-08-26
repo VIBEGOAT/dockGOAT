@@ -1,64 +1,61 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Atom, Github } from 'lucide-react';
+import { Github } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
   return (
     <motion.header 
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 100 }}
-      className="border-b border-indigo-900/40 bg-slate-950/95 backdrop-blur-md sticky top-0 z-50 shadow-lg shadow-indigo-900/10"
+      transition={{ type: "spring", stiffness: 80, damping: 12 }}
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl bg-white/70 dark:bg-black/70 border-b border-black/5 dark:border-white/10"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <motion.div 
-              whileHover={{ rotate: 360, scale: 1.1 }}
-              transition={{ duration: 0.5 }}
-              className="p-2.5 bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-lg border border-indigo-500/40 shadow-lg shadow-indigo-500/20"
-            >
-              <Atom className="w-6 h-6 text-indigo-300" />
-            </motion.div>
-            <div>
-              <motion.h1 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 tracking-tight"
-              >
-                dockGOAT
-              </motion.h1>
-              <motion.p 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-xs text-gray-400 font-mono tracking-wider"
-              >
-                COMPUTATIONAL DRUG DISCOVERY
-              </motion.p>
+          {/* Logo & Branding */}
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="flex items-center gap-3 cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
+              <span className="text-white font-bold text-lg">D</span>
             </div>
-          </div>
+            <div>
+              <h1 className="text-base font-semibold text-black dark:text-white tracking-tight">dockGOAT</h1>
+              <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Molecular Docking</p>
+            </div>
+          </motion.div>
 
+          {/* Navigation */}
           <nav className="flex items-center gap-6 text-sm">
             <motion.a 
-              whileHover={{ scale: 1.1, y: -2 }}
+              whileHover={{ color: '#0071e3' }}
+              href="#features"
+              className="hidden sm:block text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+            >
+              Features
+            </motion.a>
+            <motion.a 
+              whileHover={{ color: '#0071e3' }}
+              href="#workspace"
+              className="hidden sm:block text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+            >
+              Workspace
+            </motion.a>
+            <ThemeToggle />
+            <motion.a 
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href="https://github.com/VIBEGOAT/dockGOAT" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="flex items-center gap-2 text-gray-400 hover:text-indigo-300 font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 hover:bg-black/10 dark:hover:bg-white/20 transition-colors font-medium"
             >
               <Github className="w-4 h-4" />
-              <span className="hidden sm:inline">Repository</span>
-            </motion.a>
-            <motion.a 
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              href="#" 
-              className="text-gray-400 hover:text-indigo-300 font-medium transition-colors font-mono"
-            >
-              DOCS
+              <span className="hidden sm:inline text-sm">GitHub</span>
             </motion.a>
           </nav>
         </div>

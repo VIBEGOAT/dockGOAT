@@ -13,17 +13,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "dockGOAT - Molecular Docking",
-  description: "Professional molecular docking with AutoDock Vina. Free. No credit card required.",
+  title: "dockGOAT - Molecular Docking Pipeline",
+  description: "High-throughput virtual screening platform for structure-based drug design. Powered by AutoDock Vina.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-white text-gray-900">
+      <body className="min-h-screen">
         {children}
       </body>
     </html>
