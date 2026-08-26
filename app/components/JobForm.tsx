@@ -358,6 +358,6 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
           Estimated runtime: 5-15 minutes per ligand
         </p>
       </form>
-    </div>
+    </motion.div>
   );
 }
