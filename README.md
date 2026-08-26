@@ -227,7 +227,7 @@ npm install
 npm run dev
 ```
 
-Visit http://localhost:3000
+Visit: http://localhost:3000](https://dock-goat.vercel.app/
 
 ### Build for Production
 
@@ -347,4 +347,4 @@ A: .pdbqt (primary), .sdf, .pdb (after conversion)
 
 Free tier stack. Enterprise results.
 
-**[Open App](http://localhost:3000)** • **[GitHub](https://github.com/VIBEGOAT/dockGOAT)** • **[Docs](./docs)**
+**[Open App](https://dock-goat.vercel.app/)** • **[GitHub](https://github.com/VIBEGOAT/dockGOAT)** • **[Docs](./docs)**
