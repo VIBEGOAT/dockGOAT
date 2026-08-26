@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
@@ -14,7 +14,7 @@ const ThemeContext = createContext<ThemeContextType>({
   toggleTheme: () => {},
 });
 
-/** Applies theme class to <html> and persists to localStorage. */
+/** Mutates <html> class and persists. Pure DOM, no React state. */
 function applyTheme(t: Theme) {
   if (t === 'dark') {
     document.documentElement.classList.add('dark');
@@ -25,23 +25,30 @@ function applyTheme(t: Theme) {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // Initialise from the class already stamped by the blocking <head> script
-  // so the very first render uses the correct value — no extra effect needed.
-  const [theme, setTheme] = useState<Theme>(() => {
-    // useState initialiser only runs on the client, so document is available
-    if (typeof document !== 'undefined') {
-      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-    }
-    return 'light';
-  });
+  /*
+   * Read the class the blocking <head> script already stamped.
+   * The lazy initialiser runs client-only so document is always available.
+   * First render already has the correct theme — no second render/flicker.
+   */
+  const [theme, setTheme] = useState<Theme>(() =>
+    typeof document !== 'undefined' &&
+    document.documentElement.classList.contains('dark')
+      ? 'dark'
+      : 'light'
+  );
 
-  // Keep state in sync if something outside (e.g., OS preference) changes it
+  /*
+   * One-time sync: reconcile if localStorage and the DOM class diverge.
+   * Normally a no-op since the blocking script already applied localStorage.
+   */
   useEffect(() => {
     const stored = localStorage.getItem('theme') as Theme | null;
-    const resolved: Theme = stored === 'dark' ? 'dark' : 'light';
-    setTheme(resolved);
-    applyTheme(resolved);
-  }, []);
+    if (stored && stored !== theme) {
+      setTheme(stored);
+      applyTheme(stored);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // run once on mount only
 
   const toggleTheme = () => {
     const next: Theme = theme === 'light' ? 'dark' : 'light';

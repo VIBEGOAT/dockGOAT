@@ -21,7 +21,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <div className="relative min-h-screen bg-[#fbfbfd] dark:bg-black text-slate-900 dark:text-white transition-colors duration-300">
+      <div className="relative z-10 min-h-screen text-slate-900 dark:text-white">
         {/* Fixed canvas background */}
         <ParticleBackground />
 
@@ -157,3 +157,4 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
