@@ -1,15 +1,36 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import JobForm from './components/JobForm';
 import JobList from './components/JobList';
 import { Atom, BookOpen, GitBranch, Microscope, Cpu, TrendingUp, ChevronDown } from 'lucide-react';
 
+interface Particle {
+  id: number;
+  left: number;
+  top: number;
+  duration: number;
+  delay: number;
+}
+
 export default function App() {
   const [jobListRefresh, setJobListRefresh] = useState<string>('');
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [particles, setParticles] = useState<Particle[]>([]);
+
+  // Generate particles only on client side to avoid hydration mismatch
+  useEffect(() => {
+    const generatedParticles = [...Array(20)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }));
+    setParticles(generatedParticles);
+  }, []);
 
   const handleJobSubmitted = (jobId: string) => {
     setJobListRefresh(jobId);
@@ -32,22 +53,22 @@ export default function App() {
       >
         {/* Animated background particles */}
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(20)].map((_, i) => (
+          {particles.map((particle) => (
             <motion.div
-              key={i}
+              key={particle.id}
               className="absolute w-1 h-1 bg-indigo-400/30 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
               }}
               animate={{
                 y: [0, -30, 0],
                 opacity: [0.2, 0.5, 0.2],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: particle.duration,
                 repeat: Infinity,
-                delay: Math.random() * 2,
+                delay: particle.delay,
               }}
             />
           ))}
