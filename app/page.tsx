@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
@@ -25,16 +25,16 @@ export default function App() {
         {/* Fixed canvas background */}
         <ParticleBackground />
 
-        {/* ── Navigation ───────────────────────────────────────────────── */}
+        {/* â”€â”€ Navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <Header />
 
-        {/* ── Hero ─────────────────────────────────────────────────────── */}
+        {/* â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <HeroSection onCtaClick={scrollToWorkspace} />
 
-        {/* ── Bioinformatics Concepts (accordion) ──────────────────────── */}
+        {/* â”€â”€ Bioinformatics Concepts (accordion) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <BioinformaticsSection />
 
-        {/* ── Virtual Screening Workstation ────────────────────────────── */}
+        {/* â”€â”€ Virtual Screening Workstation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <section
           ref={workspaceRef}
           id="workspace"
@@ -80,7 +80,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── About / Attribution ──────────────────────────────────────── */}
+        {/* â”€â”€ About / Attribution â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <section className="relative z-10 py-8 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
@@ -95,10 +95,10 @@ export default function App() {
                   <span className="text-white font-bold text-xl">K</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                  <h3 className="text-xl font-bold text-[#1d1d1f] dark:text-white mb-3">
                     Platform Architecture
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+                  <p className="text-[#3a3a3c] dark:text-[#a1a1a6] leading-relaxed mb-4">
                     Developed by{' '}
                     <span className="text-blue-600 dark:text-blue-400 font-semibold">
                       Karan Tandon
@@ -108,10 +108,10 @@ export default function App() {
                     This platform integrates established computational chemistry protocols with modern
                     cloud infrastructure to enable reproducible, scalable structure-based drug discovery.
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-500">
-                    <span className="font-medium text-gray-700 dark:text-gray-400">Expertise: </span>
-                    Protein–ligand binding affinity prediction · Virtual screening · Molecular dynamics ·
-                    Cheminformatics · Structural biology
+                  <p className="text-sm text-[#6e6e73] dark:text-[#6e6e73]">
+                    <span className="font-medium text-[#1d1d1f] dark:text-[#a1a1a6]">Expertise: </span>
+                    Proteinâ€“ligand binding affinity prediction Â· Virtual screening Â· Molecular dynamics Â·
+                    Cheminformatics Â· Structural biology
                   </p>
                 </div>
               </div>
@@ -119,17 +119,17 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── Tech Stack (minimal footer grid) ─────────────────────────── */}
+        {/* â”€â”€ Tech Stack (minimal footer grid) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <TechStack />
 
-        {/* ── Footer ───────────────────────────────────────────────────── */}
+        {/* â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <footer className="relative z-10 border-t border-black/[0.06] dark:border-white/[0.07] py-10 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-500 text-center sm:text-left">
-                © 2026 dockGOAT. Built with Next.js, MongoDB & AutoDock Vina.
+              <p className="text-sm text-[#6e6e73] dark:text-[#6e6e73] text-center sm:text-left">
+                Â© 2026 dockGOAT. Built with Next.js, MongoDB & AutoDock Vina.
               </p>
-              <p className="text-xs text-gray-400 dark:text-gray-600 mt-0.5 text-center sm:text-left">
+              <p className="text-xs text-[#86868b] dark:text-[#48484a] mt-0.5 text-center sm:text-left">
                 Open-source computational structural biology platform
               </p>
             </div>
@@ -145,7 +145,7 @@ export default function App() {
                   href={link.href}
                   target={link.href.startsWith('http') ? '_blank' : undefined}
                   rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
+                  className="text-[#6e6e73] hover:text-[#1d1d1f] dark:text-[#a1a1a6] dark:hover:text-white transition-colors font-medium"
                 >
                   {link.label}
                 </motion.a>
@@ -157,4 +157,5 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
 
