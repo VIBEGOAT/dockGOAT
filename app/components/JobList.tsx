@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { RefreshCw, Download, CheckCircle, Clock, AlertCircle, Activity, Database } from 'lucide-react';
 
 interface Job {
@@ -86,34 +87,50 @@ export default function JobList({ refreshTrigger }: JobListProps) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-800/90 to-blue-950/90 backdrop-blur-sm rounded-lg border border-cyan-500/30 p-6 shadow-xl">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-gradient-to-br from-slate-800/90 to-purple-950/90 backdrop-blur-sm rounded-xl border border-purple-500/30 p-6 shadow-xl shadow-purple-500/10"
+    >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-cyan-500/20 rounded-lg border border-cyan-500/40">
-            <Database className="w-5 h-5 text-cyan-300" />
-          </div>
+          <motion.div 
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="p-2 bg-purple-500/20 rounded-lg border border-purple-500/40"
+          >
+            <Database className="w-5 h-5 text-purple-300" />
+          </motion.div>
           <div>
-            <h2 className="text-xl font-bold text-cyan-300">Processing Queue</h2>
+            <h2 className="text-xl font-bold text-purple-300">Processing Queue</h2>
             <p className="text-xs text-gray-400 font-mono">Real-time job monitoring</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 text-sm text-cyan-300 font-medium">
+          <label className="flex items-center gap-2 text-sm text-purple-300 font-medium">
             <input
               type="checkbox"
               checked={autoRefresh}
               onChange={(e) => setAutoRefresh(e.target.checked)}
-              className="rounded border-cyan-500 bg-slate-900 text-cyan-500 focus:ring-cyan-500/50"
+              className="rounded border-purple-500 bg-slate-900 text-purple-500 focus:ring-purple-500/50"
             />
             <span className="font-mono text-xs">Auto-refresh</span>
           </label>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={fetchJobs}
             disabled={loading}
-            className="p-2 hover:bg-cyan-500/20 rounded-lg transition-all disabled:opacity-50 border border-cyan-500/30 hover:border-cyan-500/50 hover:scale-105 active:scale-95"
+            className="p-2 hover:bg-purple-500/20 rounded-lg transition-all disabled:opacity-50 border border-purple-500/30 hover:border-purple-500/50"
           >
-            <RefreshCw className={`w-5 h-5 text-cyan-400 ${loading ? 'animate-spin' : ''}`} />
-          </button>
+            <motion.div
+              animate={loading ? { rotate: 360 } : {}}
+              transition={{ duration: 1, repeat: loading ? Infinity : 0, ease: "linear" }}
+            >
+              <RefreshCw className="w-5 h-5 text-purple-400" />
+            </motion.div>
+          </motion.button>
         </div>
       </div>
 
@@ -143,68 +160,95 @@ export default function JobList({ refreshTrigger }: JobListProps) {
         </div>
       ) : (
         <div className="space-y-3">
-          {jobs.map((job) => (
-            <div
-              key={job._id}
-              className={`p-5 rounded-lg border transition-all hover:shadow-lg hover:shadow-cyan-500/10 ${getStatusColor(job.status)}`}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3 flex-1 min-w-0">
-                  {getStatusIcon(job.status)}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-cyan-100 text-lg mb-1">{job.jobName}</h3>
-                    <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <p className="text-gray-500 font-mono text-xs uppercase">Status</p>
-                        <p className="text-gray-200 font-bold text-xs mt-1">{job.status}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-500 font-mono text-xs uppercase">Job ID</p>
-                        <p className="text-gray-400 font-mono text-xs mt-1 truncate">
-                          {job._id.substring(0, 8)}...
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-gray-500 font-mono text-xs uppercase">Created</p>
-                        <p className="text-gray-400 font-mono text-xs mt-1">{formatDate(job.createdAt)}</p>
-                      </div>
-                      {job.bestAffinity !== undefined && (
+          <AnimatePresence>
+            {jobs.map((job, index) => (
+              <motion.div
+                key={job._id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.02, y: -2 }}
+                className={`p-5 rounded-lg border transition-all hover:shadow-lg hover:shadow-purple-500/10 ${getStatusColor(job.status)}`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <motion.div
+                      animate={job.status === 'RUNNING' ? { rotate: 360 } : {}}
+                      transition={{ duration: 2, repeat: job.status === 'RUNNING' ? Infinity : 0, ease: "linear" }}
+                    >
+                      {getStatusIcon(job.status)}
+                    </motion.div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-purple-100 text-lg mb-1">{job.jobName}</h3>
+                      <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
-                          <p className="text-gray-500 font-mono text-xs uppercase">Affinity</p>
-                          <p className="text-emerald-400 font-bold text-sm mt-1">{job.bestAffinity.toFixed(2)} kcal/mol</p>
+                          <p className="text-gray-400 font-mono text-xs uppercase">Status</p>
+                          <p className="text-gray-200 font-bold text-xs mt-1">{job.status}</p>
                         </div>
+                        <div>
+                          <p className="text-gray-400 font-mono text-xs uppercase">Job ID</p>
+                          <p className="text-gray-300 font-mono text-xs mt-1 truncate">
+                            {job._id.substring(0, 8)}...
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-gray-400 font-mono text-xs uppercase">Created</p>
+                          <p className="text-gray-300 font-mono text-xs mt-1">{formatDate(job.createdAt)}</p>
+                        </div>
+                        {job.bestAffinity !== undefined && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 200 }}
+                          >
+                            <p className="text-gray-400 font-mono text-xs uppercase">Affinity</p>
+                            <p className="text-emerald-400 font-bold text-sm mt-1">{job.bestAffinity.toFixed(2)} kcal/mol</p>
+                          </motion.div>
+                        )}
+                      </div>
+
+                      {job.errorMessage && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="mt-3 p-3 bg-red-950/50 rounded-lg border border-red-500/30 text-red-300 text-xs font-mono"
+                        >
+                          ERROR: {job.errorMessage}
+                        </motion.div>
                       )}
                     </div>
-
-                    {job.errorMessage && (
-                      <div className="mt-3 p-3 bg-red-950/50 rounded-lg border border-red-500/30 text-red-300 text-xs font-mono">
-                        ERROR: {job.errorMessage}
-                      </div>
-                    )}
                   </div>
-                </div>
 
-                {job.dockingResultUrl && (
-                  <a
-                    href={job.dockingResultUrl}
-                    download
-                    className="p-2.5 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 rounded-lg transition-all hover:shadow-lg hover:shadow-cyan-500/20 flex-shrink-0 hover:scale-105 active:scale-95"
-                    title="Download results"
-                  >
-                    <Download className="w-5 h-5 text-cyan-300" />
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
+                  {job.dockingResultUrl && (
+                    <motion.a
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      whileTap={{ scale: 0.9 }}
+                      href={job.dockingResultUrl}
+                      download
+                      className="p-2.5 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 rounded-lg transition-all hover:shadow-lg hover:shadow-purple-500/20 flex-shrink-0"
+                      title="Download results"
+                    >
+                      <Download className="w-5 h-5 text-purple-300" />
+                    </motion.a>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       )}
 
-      <div className="mt-6 pt-4 border-t border-cyan-500/20 text-center">
-        <p className="text-gray-500 text-xs font-mono">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="mt-6 pt-4 border-t border-purple-500/20 text-center"
+      >
+        <p className="text-gray-400 text-xs font-mono">
           {jobs.length} job{jobs.length !== 1 ? 's' : ''} in queue • Polling interval: 5s
         </p>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

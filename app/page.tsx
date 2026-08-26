@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import Header from './components/Header';
 import JobForm from './components/JobForm';
 import JobList from './components/JobList';
@@ -19,146 +20,275 @@ export default function App() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-gray-100">
+    <main className="min-h-screen flex flex-col bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950 text-gray-100">
       <Header />
 
       {/* Hero Section */}
-      <section className="border-b border-cyan-900/30 py-16 md:py-24 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-6">
-            <div className="inline-block">
-              <div className="flex items-center gap-3 px-5 py-2 bg-cyan-500/10 backdrop-blur-sm rounded-lg border border-cyan-500/30 mb-6">
-                <Atom className="w-5 h-5 text-cyan-400" />
-                <span className="text-sm font-mono text-cyan-300 tracking-wider">COMPUTATIONAL STRUCTURAL BIOLOGY</span>
-              </div>
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-emerald-300 tracking-tight leading-tight">
-              Molecular Docking Pipeline
-            </h1>
-            
-            <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              High-throughput virtual screening platform for structure-based drug design utilizing AutoDock Vina's empirical scoring function and Lamarckian genetic algorithm
-            </p>
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="border-b border-indigo-900/30 py-16 md:py-24 bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 relative overflow-hidden"
+      >
+        {/* Animated background particles */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-indigo-400/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.2, 0.5, 0.2],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
+        </div>
 
-            <div className="flex items-center justify-center gap-4 text-sm text-gray-500 font-mono pt-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center space-y-6">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="inline-block"
+            >
+              <div className="flex items-center gap-3 px-5 py-2 bg-indigo-500/10 backdrop-blur-sm rounded-lg border border-indigo-500/30 mb-6 shadow-lg shadow-indigo-500/10">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                >
+                  <Atom className="w-5 h-5 text-indigo-400" />
+                </motion.div>
+                <span className="text-sm font-mono text-indigo-300 tracking-wider">COMPUTATIONAL STRUCTURAL BIOLOGY</span>
+              </div>
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 tracking-tight leading-tight"
+            >
+              Molecular Docking Pipeline
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed"
+            >
+              High-throughput virtual screening platform for structure-based drug design utilizing AutoDock Vina's empirical scoring function and Lamarckian genetic algorithm
+            </motion.p>
+
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="flex items-center justify-center gap-4 text-sm text-gray-400 font-mono pt-4"
+            >
               <span className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <motion.div 
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-2 h-2 bg-emerald-500 rounded-full"
+                />
                 AutoDock Vina 1.2.5
               </span>
               <span>•</span>
               <span>PDBQT Format</span>
               <span>•</span>
               <span>Flexible Docking</span>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* About Section - Karan Tandon */}
-      <section className="py-12 border-b border-cyan-900/30 bg-slate-900/50">
+      <motion.section 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="py-12 border-b border-indigo-900/30 bg-slate-950/50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-slate-800/80 to-blue-950/50 rounded-lg border border-cyan-500/20 p-8">
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            className="bg-gradient-to-br from-slate-800/80 to-indigo-950/50 rounded-xl border border-indigo-500/20 p-8 shadow-lg shadow-indigo-500/5"
+          >
             <div className="flex items-start gap-4">
-              <div className="p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/30">
-                <Microscope className="w-6 h-6 text-cyan-400" />
-              </div>
+              <motion.div 
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+                className="p-3 bg-indigo-500/10 rounded-lg border border-indigo-500/30"
+              >
+                <Microscope className="w-6 h-6 text-indigo-400" />
+              </motion.div>
               <div className="flex-1">
-                <h2 className="text-2xl font-bold text-cyan-300 mb-3">Platform Architecture</h2>
-                <p className="text-gray-400 leading-relaxed mb-4">
-                  Developed by <span className="text-cyan-300 font-semibold">Karan Tandon</span>, Lead Computational Researcher specializing in structural bioinformatics, molecular docking methodologies, and high-throughput virtual screening workflows. This platform integrates established computational chemistry protocols with modern cloud infrastructure to enable reproducible, scalable structure-based drug discovery research.
+                <h2 className="text-2xl font-bold text-indigo-300 mb-3">Platform Architecture</h2>
+                <p className="text-gray-300 leading-relaxed mb-4">
+                  Developed by <span className="text-indigo-300 font-semibold">Karan Tandon</span>, Lead Computational Researcher specializing in structural bioinformatics, molecular docking methodologies, and high-throughput virtual screening workflows. This platform integrates established computational chemistry protocols with modern cloud infrastructure to enable reproducible, scalable structure-based drug discovery research.
                 </p>
-                <p className="text-gray-500 text-sm italic">
+                <p className="text-gray-400 text-sm italic">
                   Expertise: Protein-ligand binding affinity prediction • Virtual screening • Molecular dynamics • Cheminformatics • Structural biology
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Docking Workstation */}
-      <section className="py-12">
+      <motion.section 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="py-12"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-cyan-300 mb-2">Virtual Screening Workstation</h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="mb-8"
+          >
+            <h2 className="text-3xl font-bold text-indigo-300 mb-2">Virtual Screening Workstation</h2>
             <p className="text-gray-400">Configure docking parameters and submit computational jobs to the processing queue</p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-1">
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, type: "spring" }}
+              className="lg:col-span-1"
+            >
               <JobForm onJobSubmitted={handleJobSubmitted} />
-            </div>
-            <div className="lg:col-span-2">
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4, type: "spring" }}
+              className="lg:col-span-2"
+            >
               <JobList refreshTrigger={jobListRefresh} />
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Scientific Content Sections */}
-      <section className="py-16 bg-slate-900/50 border-y border-cyan-900/30">
+      <motion.section 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="py-16 bg-slate-950/50 border-y border-indigo-900/30"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-emerald-300 mb-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-12 text-center"
+          >
+            <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 mb-4">
               Computational Drug Discovery Framework
             </h2>
-            <p className="text-gray-400 max-w-3xl mx-auto">
+            <p className="text-gray-300 max-w-3xl mx-auto">
               A comprehensive overview of structure-based drug design methodologies, from target identification to molecular dynamics simulations
             </p>
-          </div>
+          </motion.div>
 
           {/* Target Identification */}
-          <div className="mb-4">
-            <button
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mb-4"
+          >
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
               onClick={() => toggleSection('target')}
-              className="w-full bg-gradient-to-r from-slate-800 to-blue-950/50 border border-cyan-500/20 rounded-lg p-6 hover:border-cyan-500/40 transition-all"
+              className="w-full bg-gradient-to-r from-slate-800 to-indigo-950/50 border border-indigo-500/20 rounded-lg p-6 hover:border-indigo-500/40 transition-all"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-cyan-500/10 rounded-lg">
-                    <Microscope className="w-6 h-6 text-cyan-400" />
-                  </div>
+                  <motion.div 
+                    animate={{ rotate: expandedSection === 'target' ? 360 : 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="p-3 bg-indigo-500/10 rounded-lg"
+                  >
+                    <Microscope className="w-6 h-6 text-indigo-400" />
+                  </motion.div>
                   <div className="text-left">
-                    <h3 className="text-xl font-bold text-cyan-300">Target Identification & Validation</h3>
-                    <p className="text-gray-400 text-sm mt-1">Structural target selection and binding site characterization</p>
+                    <h3 className="text-xl font-bold text-indigo-300">Target Identification & Validation</h3>
+                    <p className="text-gray-300 text-sm mt-1">Structural target selection and binding site characterization</p>
                   </div>
                 </div>
-                <ChevronDown className={`w-5 h-5 text-cyan-400 transition-transform ${expandedSection === 'target' ? 'rotate-180' : ''}`} />
+                <motion.div
+                  animate={{ rotate: expandedSection === 'target' ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ChevronDown className="w-5 h-5 text-indigo-400" />
+                </motion.div>
               </div>
-            </button>
+            </motion.button>
             {expandedSection === 'target' && (
-              <div className="mt-4 bg-slate-800/50 border border-cyan-500/10 rounded-lg p-8 space-y-4">
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="mt-4 bg-slate-800/50 border border-indigo-500/10 rounded-lg p-8 space-y-4"
+              >
                 <p className="text-gray-300 leading-relaxed">
                   Target identification represents the critical first step in structure-based drug design. The process begins with proteomic and genomic profiling to identify disease-relevant biomolecules, followed by structural characterization using X-ray crystallography (resolution &lt;2.5 Å preferred), cryo-electron microscopy (cryo-EM), or NMR spectroscopy.
                 </p>
-                <div className="bg-slate-900/80 p-6 rounded-lg border border-cyan-500/20">
-                  <h4 className="text-lg font-semibold text-cyan-300 mb-3">Binding Pocket Detection Algorithms</h4>
-                  <ul className="space-y-2 text-gray-400">
+                <div className="bg-slate-900/80 p-6 rounded-lg border border-indigo-500/20">
+                  <h4 className="text-lg font-semibold text-indigo-300 mb-3">Binding Pocket Detection Algorithms</h4>
+                  <ul className="space-y-2 text-gray-300">
                     <li className="flex items-start gap-3">
-                      <span className="text-cyan-400 mt-1">→</span>
-                      <span><strong className="text-gray-300">LIGSITE/SURFNET:</strong> Geometric algorithms identifying surface pockets using molecular surface calculations and alpha shapes</span>
+                      <span className="text-indigo-400 mt-1">→</span>
+                      <span><strong className="text-gray-200">LIGSITE/SURFNET:</strong> Geometric algorithms identifying surface pockets using molecular surface calculations and alpha shapes</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-cyan-400 mt-1">→</span>
-                      <span><strong className="text-gray-300">FPocket:</strong> Voronoi tessellation-based detection with druggability scoring (α-spheres method)</span>
+                      <span className="text-indigo-400 mt-1">→</span>
+                      <span><strong className="text-gray-200">FPocket:</strong> Voronoi tessellation-based detection with druggability scoring (α-spheres method)</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-cyan-400 mt-1">→</span>
-                      <span><strong className="text-gray-300">SiteMap (Schrödinger):</strong> Physics-based characterization calculating hydrophobic/hydrophilic properties</span>
+                      <span className="text-indigo-400 mt-1">→</span>
+                      <span><strong className="text-gray-200">SiteMap (Schrödinger):</strong> Physics-based characterization calculating hydrophobic/hydrophilic properties</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-cyan-400 mt-1">→</span>
-                      <span><strong className="text-gray-300">CASTp:</strong> Computational geometry approach for pocket volume and area calculations</span>
+                      <span className="text-indigo-400 mt-1">→</span>
+                      <span><strong className="text-gray-200">CASTp:</strong> Computational geometry approach for pocket volume and area calculations</span>
                     </li>
                   </ul>
                 </div>
                 <p className="text-gray-300 leading-relaxed">
                   Homology modeling (via MODELLER, SWISS-MODEL) is employed when experimental structures are unavailable, utilizing sequence alignment to templates with &gt;30% identity. Active site residues are identified through conservation analysis, known inhibitor co-crystal structures, and site-directed mutagenesis data.
                 </p>
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
 
           {/* Molecular Docking */}
           <div className="mb-4">

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { AlertCircle, CheckCircle, Target, Upload, Grid3x3 } from 'lucide-react';
 
 interface JobFormProps {
@@ -85,29 +86,46 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-800/90 to-blue-950/90 backdrop-blur-sm rounded-lg border border-cyan-500/30 p-6 shadow-xl">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-gradient-to-br from-slate-800/90 to-indigo-950/90 backdrop-blur-sm rounded-xl border border-indigo-500/30 p-6 shadow-xl shadow-indigo-500/10"
+    >
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-cyan-500/20 rounded-lg border border-cyan-500/40">
-          <Target className="w-5 h-5 text-cyan-300" />
-        </div>
+        <motion.div 
+          whileHover={{ scale: 1.1, rotate: 360 }}
+          transition={{ duration: 0.5 }}
+          className="p-2 bg-indigo-500/20 rounded-lg border border-indigo-500/40"
+        >
+          <Target className="w-5 h-5 text-indigo-300" />
+        </motion.div>
         <div>
-          <h2 className="text-xl font-bold text-cyan-300">Submit Docking Job</h2>
+          <h2 className="text-xl font-bold text-indigo-300">Submit Docking Job</h2>
           <p className="text-xs text-gray-400 font-mono">PDBQT format required</p>
         </div>
       </div>
 
       {error && (
-        <div className="mb-4 p-4 bg-red-900/30 border border-red-500/50 rounded-lg flex items-start gap-3">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-4 p-4 bg-red-900/30 border border-red-500/50 rounded-lg flex items-start gap-3"
+        >
           <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
           <p className="text-red-300 text-sm">{error}</p>
-        </div>
+        </motion.div>
       )}
 
       {success && (
-        <div className="mb-4 p-4 bg-emerald-900/30 border border-emerald-500/50 rounded-lg flex items-start gap-3 animate-fade-in">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="mb-4 p-4 bg-emerald-900/30 border border-emerald-500/50 rounded-lg flex items-start gap-3"
+        >
           <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
           <p className="text-emerald-300 text-sm font-medium">Job queued for processing</p>
-        </div>
+        </motion.div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -121,7 +139,7 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
             value={jobName}
             onChange={(e) => setJobName(e.target.value)}
             placeholder="e.g., Breast Cancer, SARS-CoV-2, Alzheimer's Disease"
-            className="w-full px-4 py-2.5 bg-slate-900/80 border border-cyan-500/30 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-transparent font-mono text-sm"
+            className="w-full px-4 py-2.5 bg-slate-900/80 border border-indigo-500/30 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent font-mono text-sm transition-all"
           />
         </div>
 
@@ -311,23 +329,30 @@ export default function JobForm({ onJobSubmitted }: JobFormProps) {
         </div>
 
         {/* Submit Button */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={loading}
-          className="w-full px-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-bold rounded-lg transition-all duration-200 shadow-lg hover:shadow-cyan-500/50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] font-mono uppercase tracking-wider text-sm"
+          className="w-full px-4 py-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-bold rounded-lg transition-all duration-200 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 disabled:cursor-not-allowed font-mono uppercase tracking-wider text-sm"
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+              <motion.svg
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+              >
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
+              </motion.svg>
               Processing...
             </span>
           ) : (
             'Submit to Queue'
           )}
-        </button>
+        </motion.button>
 
         <p className="text-xs text-gray-500 text-center font-mono">
           Estimated runtime: 5-15 minutes per ligand
