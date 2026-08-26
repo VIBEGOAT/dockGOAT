@@ -127,7 +127,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-500 text-center sm:text-left">
-                © 2025 dockGOAT. Built with Next.js, MongoDB & AutoDock Vina.
+                © 2026 dockGOAT. Built with Next.js, MongoDB & AutoDock Vina.
               </p>
               <p className="text-xs text-gray-400 dark:text-gray-600 mt-0.5 text-center sm:text-left">
                 Open-source computational structural biology platform
