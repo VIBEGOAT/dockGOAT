@@ -658,7 +658,7 @@ export default function App() {
             )}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Footer */}
       <footer className="border-t border-cyan-900/30 bg-slate-950 py-12">
