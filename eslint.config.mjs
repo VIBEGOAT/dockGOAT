@@ -12,6 +12,18 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Superseded by components/ and lib/. Nothing imports these any more;
+    // they are kept only until they can be deleted.
+    "app/components/**",
+    "app/api/**",
+    "lib/job-helpers.ts",
+    "lib/r2-client.ts",
+    "lib/supabase-client.ts",
+    "lib/mongodb.ts",
+    "models/**",
+    "worker/**",
+    // Vendored third-party WebAssembly glue.
+    "public/**",
   ]),
 ]);
 

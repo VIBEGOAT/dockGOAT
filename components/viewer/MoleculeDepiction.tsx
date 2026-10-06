@@ -20,24 +20,27 @@ export default function MoleculeDepiction({
   highlightAtoms?: number[];
   className?: string;
 }) {
-  const [svg, setSvg] = useState<string | null>(null);
-  const [failed, setFailed] = useState(false);
+  // Each result is tagged with the request it answers, so a stale drawing is
+  // never shown for a new molecule and no state has to be reset in an effect.
+  const highlightKey = highlightAtoms?.join(',') ?? '';
+  const key = `${smiles}|${width}|${height}|${highlightKey}`;
+  const [result, setResult] = useState<{ key: string; svg: string | null } | null>(null);
 
   useEffect(() => {
-    let alive = true;
-    setSvg(null);
-    setFailed(false);
     if (!smiles) return;
+    let alive = true;
+    const atoms = highlightKey ? highlightKey.split(',').map(Number) : undefined;
     getRDKit()
-      .then((rd) => {
-        if (!alive) return;
-        setSvg(depict(rd, smiles, { width, height, highlightAtoms, transparent: true }));
-      })
-      .catch(() => alive && setFailed(true));
+      .then((rd) => alive && setResult({ key, svg: depict(rd, smiles, { width, height, highlightAtoms: atoms, transparent: true }) }))
+      .catch(() => alive && setResult({ key, svg: null }));
     return () => {
       alive = false;
     };
-  }, [smiles, width, height, highlightAtoms]);
+  }, [key, smiles, width, height, highlightKey]);
+
+  const current = result?.key === key ? result : null;
+  const svg = current?.svg ?? null;
+  const failed = current !== null && current.svg === null;
 
   if (failed) return <div className={`flex h-full w-full items-center justify-center text-[11px] text-subtle ${className ?? ''}`}>No depiction</div>;
   if (!svg) return <div className={`h-full w-full animate-pulse bg-surface-2 ${className ?? ''}`} />;

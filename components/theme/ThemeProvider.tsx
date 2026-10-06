@@ -34,6 +34,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('light');
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the bootstrap script set the class before React hydrated, so it can only be read on the client
     setThemeState(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
   }, []);
 

@@ -294,7 +294,11 @@ const MolViewer = forwardRef<ViewerHandle, ViewerProps>(function MolViewer(props
     const refocus = focusKey !== lastFocus.current;
     lastFocus.current = focusKey;
     if (refocus) {
-      if (focus === 'ligands' && ligandModels.length) v.zoomTo({ model: ligandModels } as never);
+      if (focus === 'ligands' && ligandModels.length) {
+        // Frame the ligand together with the residues around it, so the
+        // binding site is visible rather than just the ligand filling the view.
+        v.zoomTo({ within: { distance: 7, sel: { model: ligandModels[0] } } } as never);
+      }
       else if (focus === 'box' && box) {
         v.zoomTo({ model: receptorModel ?? undefined, within: { distance: Math.max(...box.size) / 2, sel: {} } } as never);
         v.center({ x: box.center[0], y: box.center[1], z: box.center[2] } as never);

@@ -18,7 +18,7 @@ import {
 import SiteFooter from '@/components/layout/SiteFooter';
 import Concepts from '@/components/landing/Concepts';
 import HeroViewer from '@/components/landing/HeroViewer';
-import { GITHUB_URL } from '@/components/layout/nav';
+import {} from '@/components/layout/nav';
 
 const TOOLS = [
   {

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Camera, Maximize2, RotateCw } from 'lucide-react';
 import Ramachandran from './Ramachandran';
 import TargetPanel, { type TargetMode, type TargetSelection } from '@/components/dock/TargetPanel';
-import { Badge, Button, Callout, Card, CardHeader, Checkbox, EmptyState, SectionLabel, Segmented, Stat, cn } from '@/components/ui/primitives';
+import { Badge, Button, Callout, Card, Checkbox, EmptyState, SectionLabel, Segmented, Stat, cn } from '@/components/ui/primitives';
 import type { ColorScheme, ReceptorStyle, ViewerHandle } from '@/components/viewer/MolViewer';
 import { protParam } from '@/lib/bio/protparam';
 import { ramachandran, ramachandranSummary } from '@/lib/bio/ramachandran';
@@ -69,6 +69,7 @@ export default function ViewerWorkbench() {
   // Allow /viewer?pdb=1IEP deep links.
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('pdb');
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- ?pdb= deep link starts a network load once, after hydration
     if (id) load('pdb', id);
   }, [load]);
 

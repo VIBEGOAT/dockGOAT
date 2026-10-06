@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { ArrowLeftRight, Dna, Download, FileCog, Pill } from 'lucide-react';
 import MoleculeDepiction from '@/components/viewer/MoleculeDepiction';
-import { Badge, Button, Callout, Card, CardHeader, Field, Input, NumberInput, SectionLabel, Segmented, Stat, Textarea } from '@/components/ui/primitives';
+import { Badge, Button, Callout, Card, CardHeader, Field, NumberInput, Segmented, Stat, Textarea } from '@/components/ui/primitives';
 import { protParam } from '@/lib/bio/protparam';
 import { cleanSequence, parseFasta } from '@/lib/bio/sequence';
 import { writeSDF, writeMolfile } from '@/lib/chem/molfile';

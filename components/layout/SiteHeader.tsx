@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Github, Menu, X } from 'lucide-react';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 import { cn } from '@/components/ui/primitives';
@@ -11,9 +11,10 @@ import { GITHUB_URL, NAV } from './nav';
 
 export default function SiteHeader() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => setOpen(false), [pathname]);
+  // The menu is open only on the page it was opened from, so navigating closes it.
+  const [openOn, setOpenOn] = useState<string | null>(null);
+  const open = openOn === pathname;
+  const setOpen = (fn: (v: boolean) => boolean) => setOpenOn(fn(open) ? pathname : null);
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-[color-mix(in_srgb,var(--surface)_85%,transparent)] backdrop-blur-md">

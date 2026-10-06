@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { FileUp, FlaskConical, Pill, Search, Shapes } from 'lucide-react';
-import { Badge, Button, Callout, Field, Input, Segmented, SectionLabel, Spinner, cn } from '@/components/ui/primitives';
+import { Badge, Button, Callout, Input, Segmented, SectionLabel, Spinner } from '@/components/ui/primitives';
 import MoleculeDepiction from '@/components/viewer/MoleculeDepiction';
 import type { LoadedLigand, LoadedTarget } from '@/lib/workbench/inputs';
 import type { HetGroup } from '@/lib/chem/pdb';
@@ -43,10 +43,7 @@ export default function LigandPanel({
 
   // PubChem name suggestions, debounced.
   useEffect(() => {
-    if (mode !== 'name' || value.trim().length < 2) {
-      setSuggestions([]);
-      return;
-    }
+    if (mode !== 'name' || value.trim().length < 2) return;
     let alive = true;
     const t = setTimeout(() => {
       autocomplete(value, 6)
@@ -58,6 +55,8 @@ export default function LigandPanel({
       clearTimeout(t);
     };
   }, [mode, value]);
+
+  const visibleSuggestions = mode === 'name' && value.trim().length >= 2 ? suggestions : [];
 
   const submit = (v = value) => {
     if (mode === 'file') fileRef.current?.click();
@@ -153,9 +152,9 @@ export default function LigandPanel({
               Build
             </Button>
           </div>
-          {suggestions.length > 0 && (
+          {visibleSuggestions.length > 0 && (
             <ul className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-line bg-surface shadow-float">
-              {suggestions.map((s) => (
+              {visibleSuggestions.map((s) => (
                 <li key={s}>
                   <button
                     type="button"

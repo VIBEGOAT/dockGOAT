@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { Database, FileUp, Sparkles, Target as TargetIcon } from 'lucide-react';
-import { Badge, Button, Callout, Checkbox, Field, Input, Segmented, SectionLabel, Spinner, cn } from '@/components/ui/primitives';
+import { Badge, Button, Callout, Checkbox, Input, Segmented, SectionLabel, Spinner, cn } from '@/components/ui/primitives';
 import type { LoadedTarget } from '@/lib/workbench/inputs';
 import { entryUrl } from '@/lib/services/rcsb';
 

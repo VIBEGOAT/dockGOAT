@@ -2,7 +2,7 @@
 
 import { Cpu, Play, Settings2, Square } from 'lucide-react';
 import { useState } from 'react';
-import { Badge, Button, Callout, NumberInput, ProgressBar, SectionLabel, Segmented, cn } from '@/components/ui/primitives';
+import { Button, Callout, NumberInput, ProgressBar, SectionLabel, Segmented } from '@/components/ui/primitives';
 import type { ScoringFunction, VinaPhase } from '@/lib/docking/vina';
 
 export interface RunSettings {

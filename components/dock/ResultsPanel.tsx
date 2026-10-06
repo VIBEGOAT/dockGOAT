@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Download, Link2, ScrollText, Sigma, Trophy } from 'lucide-react';
-import { Badge, Button, Callout, EmptyState, SectionLabel, Segmented, Stat, cn } from '@/components/ui/primitives';
+import { Badge, Button, Callout, EmptyState, Segmented, Stat, cn } from '@/components/ui/primitives';
 import type { InteractionReport, InteractionType } from '@/lib/docking/interactions';
 import { formatMolar, kdFromDeltaG, ligandEfficiency, type VinaResult } from '@/lib/docking/vina';
 

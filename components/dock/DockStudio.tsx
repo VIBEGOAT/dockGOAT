@@ -2,13 +2,13 @@
 
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AlertTriangle, Camera, Eye, Maximize2, RotateCcw } from 'lucide-react';
+import { Camera, Eye, Maximize2 } from 'lucide-react';
 import TargetPanel, { type TargetMode, type TargetSelection } from './TargetPanel';
 import LigandPanel, { type LigandMode } from './LigandPanel';
 import BoxPanel from './BoxPanel';
 import RunPanel, { DEFAULT_RUN, type RunSettings } from './RunPanel';
 import ResultsPanel, { INTERACTION_COLOR } from './ResultsPanel';
-import { Badge, Button, Callout, Segmented, Spinner, cn } from '@/components/ui/primitives';
+import { Badge, Button, Callout, Segmented, Spinner } from '@/components/ui/primitives';
 import type { ViewerHandle, ViewerLigand, ViewerLine, ReceptorStyle } from '@/components/viewer/MolViewer';
 import type { Vec3 } from '@/lib/chem/geometry';
 import type { HetGroup } from '@/lib/chem/pdb';
@@ -82,6 +82,7 @@ export default function DockStudio() {
   const maxThreads = useMemo(() => defaultThreads(), []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- crossOriginIsolated and hardwareConcurrency exist only in the browser
     setBlocked(vinaSupportProblem());
     setSettings((s) => ({ ...s, cpu: Math.min(s.cpu, defaultThreads()) }));
   }, []);
@@ -271,15 +272,11 @@ export default function DockStudio() {
     return result.poses.map((p) => poseMolecule(ligand.molecule, preparedLigand.ligand.atomMap, p.coords, `${ligand.name} mode ${p.mode}`));
   }, [result, ligand, preparedLigand]);
 
-  const [interactions, setInteractions] = useState<InteractionReport | null>(null);
-  useEffect(() => {
+  const interactions = useMemo((): InteractionReport | null => {
     const mol = poseMolecules[selectedPose];
-    if (!mol || !prepared?.receptor) {
-      setInteractions(null);
-      return;
-    }
+    if (!mol || !prepared?.receptor) return null;
     // Analyse against the prepared receptor so polar hydrogens are available.
-    setInteractions(analyzeInteractions(prepared.receptor.structure, mol, { includeHetero: true }));
+    return analyzeInteractions(prepared.receptor.structure, mol, { includeHetero: true });
   }, [poseMolecules, selectedPose, prepared]);
 
   // Redocking validation: compare the top pose with the bound ligand it came from.

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertTriangle, CheckCircle2, Download, FileUp, FlaskConical, XCircle } from 'lucide-react';
 import { BoiledEggChart, RadarChart } from './Charts';
 import MoleculeDepiction from '@/components/viewer/MoleculeDepiction';
-import { Badge, Button, Callout, Card, CardHeader, EmptyState, SectionLabel, Segmented, Spinner, Stat, Textarea, cn } from '@/components/ui/primitives';
+import { Badge, Button, Callout, Card, CardHeader, EmptyState, SectionLabel, Spinner, Stat, Textarea, cn } from '@/components/ui/primitives';
 import { profileMany, profilesToCSV } from '@/lib/admet';
 import type { AdmetProfile, ProfileError, RuleResult } from '@/lib/admet/types';
 import { getRDKit } from '@/lib/chem/rdkit';
@@ -269,6 +269,7 @@ export default function AdmetWorkbench() {
     getRDKit().then(() => setReady(true)).catch(() => setError('The cheminformatics engine failed to load.'));
     // Share a molecule through the URL, e.g. /admet?smiles=CCO
     const q = new URLSearchParams(window.location.search).get('smiles');
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the ?smiles= query is only available in the browser, after hydration
     if (q) setText(q);
   }, []);
 
