@@ -144,7 +144,11 @@ const int = (v: number, w: number) => String(v).padStart(w);
 
 /** Write a V2000 molfile. Aromatic bonds are written in their Kekulé form. */
 export function writeMolfile(m: Molecule, program = 'dockGOAT'): string {
-  const is3D = m.atoms.some((a) => Math.abs(a.z) > 1e-4);
+  // A genuinely planar conformer (biphenyl, stilbene, naphthalene) can sit
+  // exactly in the xy-plane, which would otherwise be written as a flat 2D
+  // depiction and stop RDKit perceiving stereochemistry from the coordinates.
+  // Producers of real 3D geometry therefore mark it explicitly.
+  const is3D = m.props.dimensionality === '3D' || m.atoms.some((a) => Math.abs(a.z) > 1e-4);
   const out: string[] = [];
   out.push(m.title || '');
   out.push(`  ${program.slice(0, 8).padEnd(8)}          ${is3D ? '3D' : '2D'}`);

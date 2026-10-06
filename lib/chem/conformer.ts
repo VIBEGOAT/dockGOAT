@@ -1580,6 +1580,9 @@ function finish(model: Model, pos: Vec3[], report: EmbedReport): { mol: Molecule
     a.z = flat ? y * sa + z * ca : z;
   });
   for (const b of out.bonds) b.stereo = 0;
+  // Mark the result as real 3D geometry so a planar conformer is still written
+  // as a 3D molblock rather than being mistaken for a flat depiction.
+  out.props = { ...out.props, dimensionality: '3D' };
   return { mol: out, report };
 }
 
