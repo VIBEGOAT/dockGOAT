@@ -1,349 +1,66 @@
 # dockGOAT
 
-**Professional Molecular Docking SaaS built on free cloud tiers. $0/month forever.**
+**Structure-based drug discovery in your browser.** Dock ligands with AutoDock Vina, screen compound libraries, profile ADMET and drug-likeness, find binding pockets, analyse protein–ligand interactions and inspect structures in 3D — with every calculation running on your own machine. No account, no installation, no uploads.
 
-## Features
+| Page | What it does |
+| --- | --- |
+| **Docking Studio** `/dock` | Load a target (PDB, AlphaFold DB or file), supply a ligand (SMILES, PubChem name, SDF/MOL2, or the structure's own bound ligand), place the search box, run Vina, inspect poses and interactions, export SDF/CSV/PDBQT. Redocking reports an RMSD to the crystal pose. |
+| **Virtual screening** `/screen` | Dock a library against one target with an optional Lipinski pre-filter, ranked by affinity or ligand efficiency. |
+| **ADMET** `/admet` | Physicochemical properties, ESOL solubility, BOILED-Egg absorption/BBB, Lipinski/Ghose/Veber/Egan/Muegge, QED, bioavailability radar, PAINS/Brenk and toxicity alerts. Single molecule or batch. |
+| **Viewer** `/viewer` | 3D structure viewer with ProtParam sequence statistics and a Ramachandran plot. |
+| **Toolkit** `/tools` | Molecule identifiers and 3D export, ΔG ↔ Kd converter, protein sequence analysis, Vina-ready PDBQT preparation. |
+| **Docs** `/docs` | Methods, validation results, limitations and citations. |
 
-- ✅ **Fast Docking**: Results in minutes using AutoDock Vina
-- ✅ **Real-time Tracking**: Live job status updates
-- ✅ **Free Forever**: No credit card required, no hidden costs
-- ✅ **Professional UI**: Clean, minimal design
-- ✅ **Enterprise-grade**: Built on proven free tier services
+## How it works
 
-## Quick Start
+* **Docking** — [AutoDock Vina 1.2.3](https://vina.scripps.edu/) compiled to multithreaded WebAssembly by [Webina](https://github.com/durrantlab/webina) (Apache-2.0), vendored in `public/vina/`. Multithreading needs `SharedArrayBuffer`, so every route is served with `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` (see `next.config.ts`).
+* **Cheminformatics** — [RDKit MinimalLib](https://github.com/rdkit/rdkit) (WebAssembly), copied from `node_modules` into `public/rdkit/` by `scripts/copy-vendor.mjs` before `dev` and `build`.
+* **3D** — [3Dmol.js](https://3dmol.csb.pitt.edu/).
+* **External data** (fetched only when you ask): RCSB PDB, AlphaFold DB, PubChem.
 
-### 1. Open the App
+RDKit.js has no 3D embedding, so `lib/chem/conformer.ts` is a pure-TypeScript 3D builder (force-field minimisation with chirality and E/Z restraints). `lib/chem/hydrogens.ts` adds hydrogens to an existing 3D structure without moving its heavy atoms, which is what keeps crystal poses intact for redocking.
 
-```bash
-npm install
-npm run dev
-# Open http://localhost:3000
-```
-
-### 2. Submit a Job
-
-1. Click "New Job" on the left
-2. Enter a job name
-3. Upload ligand (.pdbqt/.sdf) and target (.pdbqt) files
-4. Click "Submit Job"
-5. View results in real-time
-
-### 3. Track Progress
-
-Jobs appear in the "Jobs" panel with:
-- Status (PENDING → RUNNING → COMPLETED)
-- Job ID
-- Creation time
-- Binding affinity (when complete)
-- Download button for results
-
-## Technology Stack
-
-| Component | Service | Cost |
-|-----------|---------|------|
-| Frontend | Next.js + Vercel | Free |
-| Database | MongoDB Atlas M0 | Free (512 MB) |
-| Storage | Supabase | Free (1 GB) |
-| Compute | Hugging Face Spaces | Free (2 vCPU, 16 GB RAM) |
-
-**Total Monthly Cost: $0**
-
-## Architecture
+## Layout
 
 ```
-User Browser
-    ↓
-Next.js Frontend (Vercel)
-    ↓
-Next.js API Routes (Serverless)
-    ↓
-MongoDB Atlas (Job metadata)
-Supabase Storage (.pdbqt/.sdf files)
-    ↓
-Hugging Face Spaces (Compute Worker)
-    ↓
-AutoDock Vina (Docking Engine)
+app/                 routes (Next.js App Router)
+components/          UI: dock/, screen/, admet/, viewer/, tools/, landing/, layout/, ui/
+lib/chem/            molecule model, parsers, RDKit bridge, 3D builder, hydrogens
+lib/docking/         receptor + ligand preparation, Vina wrapper, pockets, interactions, poses
+lib/admet/           property, filter, QED, ESOL, BOILED-Egg, alert engines
+lib/bio/             ProtParam, Ramachandran, sequence helpers
+lib/services/        PubChem and RCSB/AlphaFold clients
+lib/workbench/       turning user input into docking-ready files
+public/vina/         Webina WebAssembly build (+ license)
+tests/               unit and integration tests against real structures
 ```
-
-## File Structure
-
-```
-app/
-├── layout.tsx              # Root layout
-├── page.tsx               # Main app page
-├── globals.css            # Tailwind styles
-├── components/
-│   ├── Header.tsx         # Navigation
-│   ├── JobForm.tsx        # Job submission
-│   └── JobList.tsx        # Job tracking
-└── api/
-    └── jobs/
-        └── route.ts       # Job API endpoints
-models/
-├── Job.ts                 # Mongoose schema
-lib/
-├── mongodb.ts             # DB connection
-├── supabase-client.ts     # Storage client
-└── job-helpers.ts         # Utilities
-```
-
-## Environment Variables
-
-### For Local Development
-
-Create `.env.local`:
-
-```bash
-# Demo mode (no database needed)
-MONGODB_URI=mongodb://localhost:27017/dockgoat
-NEXT_PUBLIC_SUPABASE_URL=https://demo.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=demo_key_replace_with_real
-NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=dockgoat-files
-HF_SPACE_API_URL=https://placeholder-dockgoat-worker.hf.space/process-job
-HF_SPACE_API_KEY=placeholder_hf_token
-NEXT_PUBLIC_API_URL=http://localhost:3000
-```
-
-### For Production
-
-Set these in Vercel → Settings → Environment Variables:
-
-```bash
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/dockgoat
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=dockgoat-files
-HF_SPACE_API_URL=https://your-space.hf.space/process-job
-HF_SPACE_API_KEY=your_hf_token
-SUPABASE_SERVICE_KEY=your_service_key
-```
-
-## API Endpoints
-
-### GET /api/jobs
-
-Fetch user's jobs
-
-```bash
-curl "http://localhost:3000/api/jobs?userId=demo-user"
-
-Response:
-{
-  "success": true,
-  "jobs": [
-    {
-      "_id": "...",
-      "jobName": "My Docking",
-      "status": "COMPLETED",
-      "bestAffinity": -7.8,
-      "createdAt": "2026-08-25T10:30:00Z"
-    }
-  ]
-}
-```
-
-### POST /api/jobs
-
-Submit a new job
-
-```bash
-curl -X POST http://localhost:3000/api/jobs \
-  -F "userId=demo-user" \
-  -F "jobName=Test Docking" \
-  -F "ligandFile=@ligand.pdbqt" \
-  -F "targetFile=@protein.pdbqt" \
-  -F "vinaParams={...}"
-
-Response:
-{
-  "success": true,
-  "jobId": "...",
-  "status": "PENDING"
-}
-```
-
-## Demo Mode
-
-When `MONGODB_URI` is not set or points to localhost:
-
-- ✅ UI fully functional
-- ✅ Form submissions accepted
-- ✅ Jobs return demo IDs (demo_xxxxx)
-- ✅ API returns 200 status
-
-Perfect for testing UI/UX without database setup.
-
-## Production Deployment
-
-### Step 1: Get Free Credentials
-
-**MongoDB Atlas:**
-- Sign up: https://www.mongodb.com/cloud/atlas
-- Create M0 free cluster
-- Get connection string
-
-**Supabase:**
-- Sign up: https://supabase.com
-- Create project
-- Create storage bucket
-- Get URL and anon key
-
-**Hugging Face:**
-- Create Space with Docker
-- Deploy FastAPI worker
-- Get Space URL and token
-
-### Step 2: Deploy to Vercel
-
-1. Push to GitHub
-2. Connect repo to Vercel
-3. Add environment variables
-4. Deploy
-
-```bash
-git push origin main
-# Vercel auto-deploys from GitHub
-```
-
-### Step 3: Verify
-
-- Visit your Vercel URL
-- Submit a test job
-- Check MongoDB for records
-- Download results from Supabase
 
 ## Development
 
-### Install Dependencies
+Requires Node 20+.
 
 ```bash
 npm install
-```
-
-### Start Dev Server
-
-```bash
-npm run dev
-```
-
-Visit: https://dock-goat.vercel.app/
-
-### Build for Production
-
-```bash
+npm run dev        # http://localhost:3000
+npm run typecheck
+npm test           # serial: some tests assert interactive-speed budgets
 npm run build
-npm start
 ```
 
-### Run Tests
+`npm test` runs the suite with `--test-concurrency=1`. The ADMET batch and conformer-panel tests assert timing budgets and fail spuriously when run in parallel with other CPU-heavy suites.
 
-```bash
-npm run test
-```
+## Validation
 
-### Lint Code
+Checked against real structures and published values (details on the Docs page): redocking imatinib into Abl kinase (1IEP) gives 0.36 Å RMSD; pocket detection finds the ligand site in 1HSG, 3PTB, 1STP and 1IEP; TPSA matches PubChem; QED matches RDKit; ProtParam matches ExPASy; Ramachandran regions follow MolProbity.
 
-```bash
-npm run lint
-```
+## Limitations
 
-## Project Structure
+Rigid receptor, no explicit waters, no covalent or organometallic ligands, no automatic protonation-state assignment, and Vina scores are estimates (typical error ~2 kcal/mol). Keep the tab in the foreground during long runs; browsers throttle hidden tabs. See `/docs#limitations`.
 
-| File | Purpose |
-|------|---------|
-| `app/page.tsx` | Main app page |
-| `app/components/JobForm.tsx` | Job submission form |
-| `app/components/JobList.tsx` | Job tracking list |
-| `app/api/jobs/route.ts` | Job API endpoints |
-| `models/Job.ts` | MongoDB schema |
-| `lib/mongodb.ts` | DB connection pool |
-| `lib/supabase-client.ts` | File storage client |
+## Deployment
 
-## Styling
+A standard Next.js app; deploys to Vercel with no environment variables. The only requirement is that the COOP/COEP headers in `next.config.ts` are served on every route. Everything else is static assets.
 
-Built with **Tailwind CSS** for minimal, professional design.
+## Licences
 
-- Clean white background
-- Minimalist gray palette
-- Focus on usability
-- Mobile responsive
-
-## Browser Support
-
-- Chrome/Edge (latest 2 versions)
-- Firefox (latest 2 versions)
-- Safari (latest 2 versions)
-- Mobile browsers (iOS Safari, Chrome)
-
-## Performance
-
-| Metric | Target | Current |
-|--------|--------|---------|
-| Page Load | < 2s | ~1.5s |
-| API Response | < 200ms | ~50-100ms |
-| Build Time | < 10s | ~5-8s |
-
-## Security
-
-- ✅ No hardcoded secrets
-- ✅ Environment variables for config
-- ✅ Input validation on all endpoints
-- ✅ HTTPS only (Vercel enforces)
-- ✅ No data retention after job completion
-
-## Contributing
-
-We welcome contributions! 
-
-1. Fork the repo
-2. Create feature branch
-3. Submit pull request
-
-## License
-
-MIT License - see LICENSE file
-
-## Support
-
-- GitHub Issues: https://github.com/VIBEGOAT/dockGOAT/issues
-- Documentation: See docs/ folder
-- Email: support@dockgoat.dev
-
-## Roadmap
-
-- [ ] Web-based 3D visualization
-- [ ] Batch job submission
-- [ ] API authentication
-- [ ] Job templates
-- [ ] Advanced parameter tuning
-- [ ] Result analytics
-- [ ] Team collaboration
-- [ ] Custom compute workers
-
-## FAQ
-
-**Q: Is this production-ready?**
-A: Yes! Built on enterprise-grade free tiers with full monitoring.
-
-**Q: Can I use this for commercial research?**
-A: Yes! MIT License allows commercial use.
-
-**Q: How much does it cost?**
-A: $0/month. Forever. No hidden fees.
-
-**Q: Can I host this myself?**
-A: Yes! All components support self-hosting.
-
-**Q: How long do docking jobs take?**
-A: Typically 2-10 minutes depending on complexity.
-
-**Q: What file formats are supported?**
-A: .pdbqt (primary), .sdf, .pdb (after conversion)
-
----
-
-**Made with ❤️ by dockGOAT**
-
-Free tier stack. Enterprise results.
-
-**[Open App](https://dock-goat.vercel.app/)** • **[GitHub](https://github.com/VIBEGOAT/dockGOAT)** • **[Docs](./docs)**
+dockGOAT's own code is released under the repository's licence. Bundled third-party components: AutoDock Vina and Webina (Apache-2.0, see `public/vina/LICENSE-Webina.md`), RDKit (BSD-3-Clause), 3Dmol.js (BSD-3-Clause). The dipeptide instability table in `lib/bio/protparam.ts` is from Biopython (BSD-3-Clause), and the Ramachandran region grids from the MolProbity Top8000 data (CC BY 4.0), with attribution in those files.
