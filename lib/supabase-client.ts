@@ -166,7 +166,7 @@ export async function listFiles(path: string): Promise<string[]> {
       throw new Error(`Supabase list error: ${error.message}`);
     }
 
-    return data?.map((file) => `${path}${file.name}`) || [];
+    return data?.map((file: { name: string }) => `${path}${file.name}`) || [];
   } catch (error) {
     console.error('Failed to list files from Supabase:', error);
     throw error;

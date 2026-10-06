@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# vendored at build time by scripts/copy-vendor.mjs
+/public/rdkit/
+
+# scratch/self-test assets generated during development
+/public/_selftest/
