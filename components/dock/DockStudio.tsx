@@ -14,7 +14,7 @@ import type { Vec3 } from '@/lib/chem/geometry';
 import type { HetGroup } from '@/lib/chem/pdb';
 import { analyzeInteractions, type InteractionReport } from '@/lib/docking/interactions';
 import { detectPockets, type Pocket } from '@/lib/docking/pocket';
-import { poseMolecule, heavyAtomAutomorphisms, symmetricRmsd } from '@/lib/docking/poses';
+import { poseMolecule, redockingRmsd } from '@/lib/docking/poses';
 import { prepareReceptor, type PreparedReceptor } from '@/lib/docking/receptor';
 import type { PreparedLigand } from '@/lib/docking/ligand';
 import { defaultThreads, runVina, vinaSupportProblem, VinaCancelled, type VinaHandle, type VinaPhase, type VinaResult } from '@/lib/docking/vina';
@@ -293,18 +293,14 @@ export default function DockStudio() {
       }
       const rd = await getRDKit();
       if (!alive) return;
-      const { heavy, maps } = heavyAtomAutomorphisms(rd, ligand.molecule);
-      const ref = heavy.map((i) => [ligand.molecule.atoms[i].x, ligand.molecule.atoms[i].y, ligand.molecule.atoms[i].z] as Vec3);
-      const now = heavy.map((i) => [mol.atoms[i]?.x ?? NaN, mol.atoms[i]?.y ?? NaN, mol.atoms[i]?.z ?? NaN] as Vec3);
-      if (now.some((p) => !Number.isFinite(p[0]))) return;
-      const v = symmetricRmsd(now, ref, maps);
+      const v = redockingRmsd(rd, ligand.molecule, preparedLigand!.ligand!.atomMap, mol);
       if (alive && Number.isFinite(v)) setRedockRmsd(v);
     };
     run();
     return () => {
       alive = false;
     };
-  }, [poseMolecules, ligand, target]);
+  }, [poseMolecules, ligand, target, preparedLigand]);
 
   /* ──────────────────────────────── viewer ─────────────────────────────── */
 

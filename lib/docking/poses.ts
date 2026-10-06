@@ -69,3 +69,32 @@ export function symmetricRmsd(a: Vec3[], b: Vec3[], maps: number[][]): number {
   }
   return best;
 }
+
+/**
+ * Symmetry-corrected heavy-atom RMSD between a docked pose and the
+ * conformation the ligand was built from. When that input was the ligand's own
+ * crystal pose this is the redocking validation: below 2 A is the usual success
+ * criterion.
+ *
+ * `pose` is a molecule from `poseMolecule`, whose atoms are indexed by position
+ * in the PDBQT (`atomMap`), not by position in `source` — mixing the two
+ * silently compares unrelated atoms.
+ */
+export function redockingRmsd(rd: RDKit, source: Molecule, atomMap: number[], pose: Molecule): number {
+  const poseIndexOf = new Map<number, number>();
+  atomMap.forEach((original, k) => poseIndexOf.set(original, k));
+
+  const { heavy, maps } = heavyAtomAutomorphisms(rd, source);
+  const reference: Vec3[] = [];
+  const docked: Vec3[] = [];
+  for (const i of heavy) {
+    const k = poseIndexOf.get(i);
+    const atom = k === undefined ? undefined : pose.atoms[k];
+    // Every heavy atom is written to the PDBQT, so a gap means the pose and the
+    // source are not the same molecule and no RMSD is meaningful.
+    if (!atom) return NaN;
+    reference.push([source.atoms[i].x, source.atoms[i].y, source.atoms[i].z]);
+    docked.push([atom.x, atom.y, atom.z]);
+  }
+  return symmetricRmsd(docked, reference, maps);
+}
