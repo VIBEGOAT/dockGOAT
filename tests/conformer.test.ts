@@ -4,7 +4,7 @@ import { setupRDKit } from './setup';
 import { parseSmiles, toMolblock } from '../lib/chem/rdkit';
 import { embed3D } from '../lib/chem/conformer';
 import { adjacency, findRings } from '../lib/chem/molecule';
-import { dihedral, dist } from '../lib/chem/geometry';
+import { dihedral, dist, type Vec3 } from '../lib/chem/geometry';
 import type { Molecule } from '../lib/chem/molecule';
 
 const PANEL: [string, string][] = [
@@ -103,28 +103,19 @@ test('aromatic rings stay planar and cyclohexane puckers into a chair', async ()
   const rd = await setupRDKit();
   const { mol: benzene } = build(rd, 'c1ccccc1');
   const ring = findRings(benzene).find((r) => r.length === 6)!;
+  const at = (m: Molecule, i: number): Vec3 => [m.atoms[i].x, m.atoms[i].y, m.atoms[i].z];
+  const ringTorsion = (m: Molecule, r: number[], i: number) =>
+    dihedral(at(m, r[i]), at(m, r[(i + 1) % 6]), at(m, r[(i + 2) % 6]), at(m, r[(i + 3) % 6]));
+
   // Out-of-plane deviation: every ring torsion of a planar ring is ~0 or ~180.
   for (let i = 0; i < ring.length; i++) {
-    const t = Math.abs(
-      dihedral(
-        ...([ring[i], ring[(i + 1) % 6], ring[(i + 2) % 6], ring[(i + 3) % 6]].map((k) => [
-          benzene.atoms[k].x,
-          benzene.atoms[k].y,
-          benzene.atoms[k].z,
-        ]) as [number[], number[], number[], number[]] as never),
-      ),
-    );
+    const t = Math.abs(ringTorsion(benzene, ring, i));
     assert.ok(t < 6 || t > 174, `benzene ring torsion ${t.toFixed(1)} deg`);
   }
 
   const { mol: chx } = build(rd, 'C1CCCCC1');
   const cring = findRings(chx).find((r) => r.length === 6)!;
-  const torsions: number[] = [];
-  for (let i = 0; i < 6; i++) {
-    const idx = [cring[i], cring[(i + 1) % 6], cring[(i + 2) % 6], cring[(i + 3) % 6]];
-    const [a, b, c, d] = idx.map((k) => [chx.atoms[k].x, chx.atoms[k].y, chx.atoms[k].z] as [number, number, number]);
-    torsions.push(dihedral(a, b, c, d));
-  }
+  const torsions = Array.from({ length: 6 }, (_, i) => ringTorsion(chx, cring, i));
   // A chair alternates +/-55 deg; a flat or boat ring does not.
   for (const t of torsions) assert.ok(Math.abs(Math.abs(t) - 55) < 15, `cyclohexane torsion ${t.toFixed(1)} deg`);
   for (let i = 0; i < 6; i++) assert.ok(torsions[i] * torsions[(i + 1) % 6] < 0, 'chair torsions alternate sign');
